@@ -1,37 +1,26 @@
 package cardsystem.approval;
 
-public interface UserApprover {
-    int income();
-    int getAge();
-    boolean identityGiven();
-    boolean proofOfAddress();
+public interface CreditLimit {
+    boolean goodCreditHistory();
+    int CreditScore();
 }
 
-class Approval implements UserApprover {
-int salary;
-int age;
+class Limit implements CreditLimit {
+int Score;
+
     @Override
-    public int income() {
-        // TODO get Users Income
-        return salary;
+    public int CreditScore() {
+        // TODO Auto-generated method stub
+        return Score;
     }
 
     @Override
-    public int getAge() {
-        // TODO get users age, over 18
-        return age;
-    }
-
-    @Override
-    public boolean identityGiven() {
-        // TODO have they been verified
+    public boolean goodCreditHistory() {
+       if (Score < 600) {
+           return false;
+       } else {
         return false;
+       }
     }
 
-    @Override
-    public boolean proofOfAddress() {
-        // TODO valid proof of address
-        return false;
-    }
-    
 }
