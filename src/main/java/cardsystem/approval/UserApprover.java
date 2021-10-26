@@ -4,8 +4,9 @@ public class UserApprover {
     
     public boolean isApproved(int salary, int age, String SSN, String validEmail){
         if (isValidAge(age) && isValidSalary(salary) && isValidSSN(SSN) && isValidEmail(validEmail)) {
-        }
         return true;
+        }
+        return false;
     }
 
     private boolean isValidAge(int age) {
