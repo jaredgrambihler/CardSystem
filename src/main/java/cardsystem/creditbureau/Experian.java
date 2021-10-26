@@ -4,9 +4,7 @@ public class Experian implements CreditBureau {
     ExperianCreditReport softInquiry;
     ExperianCreditReport hardInquiry;
 
-    public Experian (ExperianCreditReport softInquiry, ExperianCreditReport hardInquiry) {
-        this.softInquiry = softInquiry
-        this.hardInquiry = hardInquiry
+    public Experian() {
     }
 
     public ExperianCreditReport getSoftInquiry(){
