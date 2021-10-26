@@ -1,6 +1,6 @@
 package cardsystem.creditbureau;
 
 public interface CreditBureau {
-    public ExperianCreditReport getSoftInquiry();
-    public ExperianCreditReport getHardInquiry();
+    public CreditReport getSoftInquiry(String ssn);
+    public CreditReport getHardInquiry(String ssn);
 }

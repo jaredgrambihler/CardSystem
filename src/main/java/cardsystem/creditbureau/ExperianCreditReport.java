@@ -2,10 +2,10 @@ package cardsystem.creditbureau;
 
 public class ExperianCreditReport implements CreditReport {
     int score;
-    int ssn;
+    String ssn;
     int creditLines;
 
-    public ExperianCreditReport (int score, int ssn, int creditLines) {
+    public ExperianCreditReport (int score, String ssn, int creditLines) {
         this.score = score;
         this.ssn = ssn;
         this.creditLines = creditLines;
@@ -15,7 +15,7 @@ public class ExperianCreditReport implements CreditReport {
         return score;
     }
 
-    public int getSSN() {
+    public String getSSN() {
         return ssn;
     }
     

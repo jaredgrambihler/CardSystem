@@ -4,7 +4,7 @@ public class Experian implements CreditBureau {
     public Experian() {
     }
 
-    public ExperianCreditReport getSoftInquiry(int ssn){
+    public ExperianCreditReport getSoftInquiry(String ssn){
         // dummy values
         // TODO database check with 'creditReport'
         int score = 600;
@@ -12,7 +12,7 @@ public class Experian implements CreditBureau {
         return new ExperianCreditReport(score, ssn, creditLines);    
     }
 
-    public ExperianCreditReport getHardInquiry(int ssn){
+    public ExperianCreditReport getHardInquiry(String ssn){
         // dummy values
         // TODO database check with 'creditReport'
         int score = 600;
