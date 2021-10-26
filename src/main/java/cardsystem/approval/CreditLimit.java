@@ -1,26 +1,24 @@
 package cardsystem.approval;
 
-public interface CreditLimit {
-    boolean goodCreditHistory();
-    int CreditScore();
-}
+import cardsystem.account.Account;
 
-class Limit implements CreditLimit {
-int Score;
+public class CreditLimit {
 
-    @Override
-    public int CreditScore() {
-        // TODO Auto-generated method stub
-        return Score;
+public int getCreditLimit(Account account) {
+    return 9;
+     //Todo talk with database
     }
 
-    @Override
-    public boolean goodCreditHistory() {
-       if (Score < 600) {
-           return false;
-       } else {
-        return false;
-       }
-    }
+ public int determineCreditLimit(int income, int creditScore, int totalCurrentCredit){
+    if (creditScore < 700) {
+        int newCreditLimit = (int) (income*0.15);
+        Math.round(newCreditLimit);
+        return newCreditLimit;
+    } else {
+            int newCreditLimit = (int) (income*0.25);
+            Math.round(newCreditLimit);
+            return newCreditLimit;
+        }
 
+    }
 }
