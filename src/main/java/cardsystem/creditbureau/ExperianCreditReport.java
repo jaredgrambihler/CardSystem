@@ -1,13 +1,22 @@
 package cardsystem.creditbureau;
 
 public class ExperianCreditReport implements CreditReport {
-    public int getScore(String ssn) {
+    int score;
+    int ssn;
+    int creditLines;
+
+    public int getScore() {
         // TODO database check
-        return int
+        return int;
+    }
+
+    public int getSSN() {
+        // TODO database check
+        return int;
     }
     
     public int getTotalCreditLines() {
         //TODO database check
-        return int
+        return int;
     }
 }

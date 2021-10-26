@@ -1,13 +1,13 @@
 package cardsystem.creditbureau;
 
 public class Experian implements CreditBureau {
-    public CreditReport getSoftInquiry(){
+    public ExperianCreditReport getSoftInquiry(){
         // TODO database check
-        return CreditReport
+        return ExperianCreditReport;
     }
 
-    public CreditReport getHordInquiry(){
+    public ExperianCreditReport getHardInquiry(){
         // TODO database check
-        return CreditReport
+        return ExperianCreditReport;
     }
 }
