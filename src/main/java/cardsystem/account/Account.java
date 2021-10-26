@@ -1,7 +1,7 @@
 package cardsystem.account;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface Account {
-	public List<String> getAccountIds();
+	public Collection<String> getAccountIds();
 }

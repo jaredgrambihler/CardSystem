@@ -3,7 +3,7 @@ package cardsystem.account;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
+import java.util.Collection;
 
 public class UserAccount implements Account {
 	private String name;
@@ -47,7 +47,7 @@ public class UserAccount implements Account {
 	}
 
 	@Override
-	public List<String> getAccountIds() {
+	public Collection<String> getAccountIds() {
 		// TODO - implement getAccoundIds with database
 		return null;
 	}
