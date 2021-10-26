@@ -7,16 +7,16 @@ public class ExperianCreditReport implements CreditReport {
 
     public int getScore() {
         // TODO database check
-        return int;
+        return score;
     }
 
     public int getSSN() {
         // TODO database check
-        return int;
+        return ssn;
     }
     
     public int getTotalCreditLines() {
         //TODO database check
-        return int;
+        return creditLines;
     }
 }
