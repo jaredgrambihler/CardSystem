@@ -9,20 +9,17 @@ public class Experian implements CreditBureau {
 
     public ExperianCreditReport getSoftInquiry(int ssn){
         // dummy values
+        // TODO database check with 'creditReport'
         int score = 600;
         int creditLines = 10000;
-        CreditReport creditReport = new ExperianCreditReport(score, ssn, creditLines)
-        // TODO database check with 'creditReport'
-        return softInquiry;
+        return new ExperianCreditReport(score, ssn, creditLines);    
     }
 
     public ExperianCreditReport getHardInquiry(int ssn){
         // dummy values
+        // TODO database check with 'creditReport'
         int score = 600;
         int creditLines = 10000;
-        CreditReport creditReport = new ExperianCreditReport(score, ssn, creditLines)
-        
-        // TODO database check with 'creditReport'
-        return hardInquiry;
+        return new ExperianCreditReport(score, ssn, creditLines);
     }
 }
