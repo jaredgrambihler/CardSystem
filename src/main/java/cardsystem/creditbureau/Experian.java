@@ -1,9 +1,6 @@
 package cardsystem.creditbureau;
 
 public class Experian implements CreditBureau {
-    ExperianCreditReport softInquiry;
-    ExperianCreditReport hardInquiry;
-
     public Experian() {
     }
 
