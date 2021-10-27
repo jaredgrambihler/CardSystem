@@ -1,4 +1,9 @@
 package cardsystem.statement;
 
-public class StatementCreator {
+import java.time.LocalDate;
+
+public interface StatementCreator {
+
+    public Statement createStatement(String accountId, StatementPeriod statementPeriod);
+
 }
