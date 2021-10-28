@@ -1,5 +1,6 @@
 package cardsystem;
 
+import cardsystem.controller.EventHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
@@ -35,7 +36,8 @@ public class HandlerStream implements RequestStreamHandler {
             HashMap event = gson.fromJson(reader, HashMap.class);
             logger.log("STREAM TYPE: " + inputStream.getClass().toString());
             logger.log("EVENT TYPE: " + event.getClass().toString());
-            writer.write(gson.toJson(event));
+            String responseString = EventHandler.handleEvent(event);
+            writer.write(responseString);
             if (writer.checkError())
             {
                 logger.log("WARNING: Writer encountered an error.");
