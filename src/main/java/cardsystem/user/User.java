@@ -3,8 +3,9 @@ package cardsystem.user;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collection;
 
-public class User {
+public class User implements UserAccount {
 	private String name;
 	private String ssn;
 	private String userId;
@@ -57,6 +58,12 @@ public class User {
 	public int getAge() {
 		Period age = Period.between(LocalDate.of(birthDate.getYear(), birthDate.getMonth(), birthDate.getDayOfMonth()), LocalDate.now());
 		return age.getYears();
+	}
+	
+	@Override
+	public Collection<String> getAccountIds() {
+		// TODO - fetch user's accounts with database
+		return null;
 	}
 	
 }
