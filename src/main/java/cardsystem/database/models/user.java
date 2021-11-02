@@ -1,6 +1,6 @@
 package cardsystem.database;
 
-@DynamoDBTable(tableName = "user")
+@DynamoDBTable(tableName = "User")
 public class User {
   private String name;
   private String userId;
@@ -9,8 +9,8 @@ public class User {
   private String emailAddress;
   private String ssn;
   
-  @DynamoDBHashKey
-  @DynamoDBAttribute
+  @DynamoDBHashKey(attributeName = "userId")
+  @DynamoDBAttribute(attributeName = "name")
   public String getName() {
     return name;
   }
@@ -18,7 +18,7 @@ public class User {
     this.name = name;
   }
   
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "UserId")
   public String getUserId() {
     return userId;
   }
@@ -26,7 +26,7 @@ public class User {
     this.userId = userId;
   } 
   
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "birthDate")
   public String getBirthDate() {
     return birthDate;
   }
@@ -34,7 +34,7 @@ public class User {
     this.birthDate = birthDate;
   }
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "income")
   public Integer getIncome() {
     return income;
   }
@@ -42,7 +42,7 @@ public class User {
     this.income = income;
   } 
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "emailAddress")
   public String getEmailAdress() {
     return emailAddress;
   }
@@ -50,7 +50,7 @@ public class User {
     this.emailAddress = emailAddress;
   } 
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "ssn")
   public String getSsn() {
     return ssn;
   }

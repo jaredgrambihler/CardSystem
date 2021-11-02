@@ -1,12 +1,12 @@
 package cardsystem.database;
 
-@DynamoDBTable(tableName = "reward")
+@DynamoDBTable(tableName = "Reward")
 public class Reward {
   private String accountId;
-  private String rewardPoints;
+  private Integer rewardPoints;
   
   @DynamoDBHashKey
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "accountId")
   public String getAccountId() {
     return accountId;
   }
@@ -14,11 +14,11 @@ public class Reward {
     this.accountId =accountId;
   }
 
-  @DynamoDBAttribute
-  public String getRewardPoints() {
+  @DynamoDBAttribute(attributeName = "rewardPoints")
+  public Integer getRewardPoints() {
     return rewardPoints;
   }
-  public void setRewardPoints(String rewardPoints) {
+  public void setRewardPoints(Integer rewardPoints) {
     this.rewardPoints = rewardPoints;
   }
 }

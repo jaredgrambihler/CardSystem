@@ -1,15 +1,15 @@
 package cardsystem.database;
 
-@DynamoDBTable(tableName = "statement")
+@DynamoDBTable(tableName = "Statement")
 public class Statement {
   private String accountId;
   private String rewards;
-  private String balance;
+  private Integer balance;
   private String startDate;
   private String endDate;
   
-  @DynamoDBHashKey
-  @DynamoDBAttribute
+  @DynamoDBHashKey(attributeName = "accountId")
+  @DynamoDBAttribute(attributeName = "accountId")
   public String getAccountId() {
     return accountId;
   }
@@ -17,7 +17,7 @@ public class Statement {
     this.accountId = accountId;
   }
   
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "rewards")
   public String getRewards() {
     return rewards;
   }
@@ -25,15 +25,15 @@ public class Statement {
     this.rewards = rewards;
   }
 
-  @DynamoDBAttribute
-  public String getBalance() {
+  @DynamoDBAttribute(attributeName = "balance")
+  public Integer getBalance() {
     return balance;
   }
-  public void setBalance(String balance) {
+  public void setBalance(Integer balance) {
     this.balance = balance;
   } 
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "startDate")
   public String getStartDate() {
     return startDate;
   }
@@ -41,7 +41,7 @@ public class Statement {
     this.startDate = startDate;
   }
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "endDate")
   public String getEndDate() {
     return endDate;
   }

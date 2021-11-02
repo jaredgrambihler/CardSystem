@@ -1,13 +1,13 @@
 package cardsystem.database;
 
-@DynamoDBTable(tableName = "creditBureau")
+@DynamoDBTable(tableName = "CreditBureau")
 public class CreditBureau {
   private Integer score;
   private String ssn;
-  private <Integer> creditLines;
+  private List<Integer> creditLines;
   
-  @DynamoDBHashKey
-  @DynamoDBAttribute
+  @DynamoDBHashKey(attributeName = "ssn")
+  @DynamoDBAttribute(attributeName = "score")
   public Integer getScore() {
     return score;
   }
@@ -15,7 +15,7 @@ public class CreditBureau {
     this.score = score;
   }
   
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "ssn")
   public String getSsn() {
     return ssn;
   }
@@ -23,7 +23,7 @@ public class CreditBureau {
     this.ssn = ssn;
   } 
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "creditLines")
   public <Integer> getCreditLines() {
     return creditLines;
   }

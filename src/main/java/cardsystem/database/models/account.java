@@ -1,22 +1,22 @@
 package cardsystem.database;
 
-@DynamoDBTable(tableName = "account")
+@DynamoDBTable(tableName = "Account")
 public class Account {
   private String accountName;
   private String accountId;
   private String accountNumber;
   private String userId;
   
-  @DynamoDBHashKey
-  @DynamoDBAttribute
+  @DynamoDBHashKey(attributeName = "accountId")
+  @DynamoDBAttribute(attributeName = "accountName")
   public String getAccountName() {
     return accountName;
   }
   public void setAccountName(String accountName) {
-    this.accounrName = accountName;
+    this.accountName = accountName;
   }
   
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "accountId")
   public String getAccountId() {
     return accountId;
   }
@@ -24,7 +24,7 @@ public class Account {
     this.accountId = accountId;
   }
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "accountNumber")
   public String getAccountNumber() {
     return accountNumber;
   }
@@ -32,7 +32,7 @@ public class Account {
     this.accountNumber = accountNumber;
   } 
 
-  @DynamoDBAttribute
+  @DynamoDBAttribute(attributeName = "userId")
   public String getUserId() {
     return userId;
   }
