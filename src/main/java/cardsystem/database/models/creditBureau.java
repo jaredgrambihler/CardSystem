@@ -7,6 +7,14 @@ public class CreditBureau {
   private List<Integer> creditLines;
   
   @DynamoDBHashKey(attributeName = "ssn")
+  @DynamoDBAttribute
+  public String getSsn() {
+    return ssn;
+  }
+  public void setSsn(String ssn) {
+    this.ssn = ssn;
+  } 
+
   @DynamoDBAttribute(attributeName = "score")
   public Integer getScore() {
     return score;
@@ -14,14 +22,6 @@ public class CreditBureau {
   public void setScore(Integer score) {
     this.score = score;
   }
-  
-  @DynamoDBAttribute(attributeName = "ssn")
-  public String getSsn() {
-    return ssn;
-  }
-  public void setSsn(String ssn) {
-    this.ssn = ssn;
-  } 
 
   @DynamoDBAttribute(attributeName = "creditLines")
   public <Integer> getCreditLines() {

@@ -9,7 +9,15 @@ public class User {
   private String emailAddress;
   private String ssn;
   
-  @DynamoDBHashKey(attributeName = "userId")
+  @DynamoDBHashKey(attributeName = "UserId")
+  @DynamoDBAttribute
+  public String getUserId() {
+    return userId;
+  }
+  public void setUserId(String userId) {
+    this.userId = userId;
+  } 
+
   @DynamoDBAttribute(attributeName = "name")
   public String getName() {
     return name;
@@ -17,14 +25,6 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
-  
-  @DynamoDBAttribute(attributeName = "UserId")
-  public String getUserId() {
-    return userId;
-  }
-  public void setUserId(String userId) {
-    this.userId = userId;
-  } 
   
   @DynamoDBAttribute(attributeName = "birthDate")
   public String getBirthDate() {

@@ -5,8 +5,8 @@ public class Reward {
   private String accountId;
   private Integer rewardPoints;
   
-  @DynamoDBHashKey
-  @DynamoDBAttribute(attributeName = "accountId")
+  @DynamoDBHashKey(attributeName = "accountId")
+  @DynamoDBAttribute
   public String getAccountId() {
     return accountId;
   }

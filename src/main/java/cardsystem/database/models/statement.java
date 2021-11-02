@@ -9,7 +9,7 @@ public class Statement {
   private String endDate;
   
   @DynamoDBHashKey(attributeName = "accountId")
-  @DynamoDBAttribute(attributeName = "accountId")
+  @DynamoDBAttribute
   public String getAccountId() {
     return accountId;
   }

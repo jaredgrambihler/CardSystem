@@ -9,20 +9,20 @@ public class Transaction {
   private String postedDate;
   
   @DynamoDBHashKey(attributeName = "transactionId")
+  @DynamoDBAttribute
+  public String getTransactionId() {
+    return transactionId;
+  }
+  public void setTransactionId(String transactionId) {
+    this.transactionId = transactionId;
+  }
+
   @DynamoDBAttribute(attributeName = "accountId")
   public String getAccountId() {
     return accountId
   }
   public void setAccountId(String accountId) {
     this.accountId = accountId;
-  }
-  
-  @DynamoDBAttribute(attributeName = "transactionId")
-  public String getTransactionId() {
-    return transactionId;
-  }
-  public void setTransactionId(String transactionId) {
-    this.transactionId = transactionId;
   }
 
   @DynamoDBAttribute(attributeName = "amount")

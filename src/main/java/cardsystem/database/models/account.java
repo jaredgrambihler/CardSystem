@@ -8,21 +8,21 @@ public class Account {
   private String userId;
   
   @DynamoDBHashKey(attributeName = "accountId")
-  @DynamoDBAttribute(attributeName = "accountName")
-  public String getAccountName() {
-    return accountName;
-  }
-  public void setAccountName(String accountName) {
-    this.accountName = accountName;
-  }
-  
-  @DynamoDBAttribute(attributeName = "accountId")
+  @DynamoDBAttribute
   public String getAccountId() {
     return accountId;
   }
   public void setAccountId(String accountId) {
     this.accountId = accountId;
   }
+
+  @DynamoDBAttribute(attributeName = "accountName")
+  public String getAccountName() {
+    return accountName;
+  }
+  public void setAccountName(String accountName) {
+    this.accountName = accountName;
+  }  
 
   @DynamoDBAttribute(attributeName = "accountNumber")
   public String getAccountNumber() {
