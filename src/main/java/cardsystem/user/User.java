@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collection;
 
-public class User implements UserAccount {
+public class User implements UserInterface {
 	private String name;
 	private String ssn;
 	private String userId;

@@ -5,9 +5,9 @@ import cardsystem.approval.UserApprover;
 
 public class AccountCreator {
 	
-	public Optional<Account> createNewAccount(String accountName, String accountNr, String userId, int salary, int age, String ssn, String validEmail) {
-		if (UserApprover.isApproved(salary, age, ssn, validEmail)) {
-			return Optional.of(new Account(accountName, createAccountId(), accountNr, userId));
+	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String accountNr, String userId, int salary) {
+		if (UserApprover.isValidSalary(salary)) {
+			return Optional.of(new CreditCardAccount(accountName, createAccountId(), accountNr, userId));
 		}
 		return Optional.empty();
 	}

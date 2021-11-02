@@ -2,8 +2,8 @@ package cardsystem.approval;
 
 public class UserApprover {
     
-    public static boolean isApproved(int salary, int age, String SSN, String validEmail){
-        if (isValidAge(age) && isValidSalary(salary) && isValidSSN(SSN) && isValidEmail(validEmail)) {
+    public static boolean isApproved(int age, String SSN, String validEmail){
+        if (isValidAge(age) && isValidSSN(SSN) && isValidEmail(validEmail)) {
         return true;
         }
         return false;
@@ -13,7 +13,7 @@ public class UserApprover {
         return age >= 18;
     }
 
-    private static boolean isValidSalary(int salary) {
+    public static boolean isValidSalary(int salary) {
         return salary >= 20000;
     }
 
