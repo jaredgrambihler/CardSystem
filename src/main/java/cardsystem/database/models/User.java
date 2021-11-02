@@ -1,4 +1,8 @@
-package cardsystem.database;
+package cardsystem.database.models;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "User")
 public class User {
@@ -43,10 +47,10 @@ public class User {
   } 
 
   @DynamoDBAttribute(attributeName = "emailAddress")
-  public String getEmailAdress() {
+  public String getEmailAddress() {
     return emailAddress;
   }
-  public void setEmailAdress(String emailAddress) {
+  public void setEmailAddress(String emailAddress) {
     this.emailAddress = emailAddress;
   } 
 

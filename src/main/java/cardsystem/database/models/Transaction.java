@@ -1,4 +1,10 @@
-package cardsystem.database;
+package cardsystem.database.models;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+import java.math.BigDecimal;
 
 @DynamoDBTable(tableName = "Transaction")
 public class Transaction {
@@ -19,7 +25,7 @@ public class Transaction {
 
   @DynamoDBAttribute(attributeName = "accountId")
   public String getAccountId() {
-    return accountId
+    return accountId;
   }
   public void setAccountId(String accountId) {
     this.accountId = accountId;

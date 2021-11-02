@@ -1,4 +1,10 @@
-package cardsystem.database;
+package cardsystem.database.models;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+import java.util.List;
 
 @DynamoDBTable(tableName = "CreditBureau")
 public class CreditBureau {
@@ -24,10 +30,10 @@ public class CreditBureau {
   }
 
   @DynamoDBAttribute(attributeName = "creditLines")
-  public <Integer> getCreditLines() {
+  public List<Integer> getCreditLines() {
     return creditLines;
   }
-  public void setCreditLines(<Integer> creditLines) {
+  public void setCreditLines(List<Integer> creditLines) {
     this.creditLines = creditLines;
   }
 }
