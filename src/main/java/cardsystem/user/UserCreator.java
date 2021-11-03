@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 
-import cardsystem.account.CreditCardAccount;
 import cardsystem.approval.UserApprover;
 
 public class UserCreator {
