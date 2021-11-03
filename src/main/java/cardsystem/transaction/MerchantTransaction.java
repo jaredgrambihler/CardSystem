@@ -1,14 +1,14 @@
 package cardsystem.transaction;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class MerchantTransaction extends Transaction {
 
     private String merchant;
 
-    public MerchantTransaction(String id, double amount, Date transactionDate, Optional<Date> postedDate, String merchant) {
-        super(id, amount, transactionDate, postedDate);
+    public MerchantTransaction(String id, String accountId, double amount, LocalDateTime transactionDate, Optional<LocalDateTime> postedDate, String merchant) {
+        super(id, accountId, amount, transactionDate, postedDate);
         this.merchant = merchant;
     }
 
@@ -19,5 +19,11 @@ public class MerchantTransaction extends Transaction {
     @Override
     public TransactionType getTransactionType() {
         return TransactionType.MERCHANT;
+    }
+
+    @Override
+    protected cardsystem.database.models.Transaction createDatabaseModel() {
+        // TODO - create merchant transaction model
+        return super.createDatabaseModel();
     }
 }

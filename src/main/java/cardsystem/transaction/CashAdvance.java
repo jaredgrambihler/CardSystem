@@ -1,12 +1,12 @@
 package cardsystem.transaction;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class CashAdvance extends Transaction {
 
-    public CashAdvance(String id, double amount, Date transactionDate, Optional<Date> postedDate) {
-        super(id, amount, transactionDate, postedDate);
+    public CashAdvance(String id, String accountId, double amount, LocalDateTime transactionDate, Optional<LocalDateTime> postedDate) {
+        super(id, accountId, amount, transactionDate, postedDate);
     }
 
     @Override
