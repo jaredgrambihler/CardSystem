@@ -3,10 +3,10 @@ package cardsystem.transaction;
 import cardsystem.database.DateConverter;
 import cardsystem.database.DynamoDBCommunicator;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class TransactionFetcher {
 
@@ -18,30 +18,59 @@ public class TransactionFetcher {
                 new DynamoDBQueryExpression<cardsystem.database.models.Transaction>()
                         .withHashKeyValues(queryModel)
         );
-        if (results.isEmpty()) {
-            return Optional.empty();
-        } else {
+        if (!results.isEmpty()) {
             cardsystem.database.models.Transaction foundTransaction = results.get(0);
-            TransactionType transactionType = TransactionType.valueOf(foundTransaction.getTransactionType());
-            Transaction transaction;
-            switch (transactionType) {
-                case CASH_ADVANCE:
-                    transaction = loadCashAdvance(foundTransaction);
-                    break;
-                case MERCHANT:
-                    transaction = loadMerchantTransaction(foundTransaction);
-                    break;
-                case PAYMENT:
-                    transaction = loadPayment(foundTransaction);
-                    break;
-                case REFUND:
-                    transaction = loadRefund(foundTransaction);
-                    break;
-                default:
-                    return Optional.empty();
+            Transaction loadedTransaction = loadTransactionFromDatabaseModel(foundTransaction);
+            if (loadedTransaction != null) {
+                return Optional.of(loadedTransaction);
             }
-            return Optional.of(transaction);
         }
+        return Optional.empty();
+    }
+
+    public static List<Transaction> loadPostedTransactions(String accountId, LocalDateTime startTime, LocalDateTime endTime) {
+        cardsystem.database.models.Transaction queryModel = new cardsystem.database.models.Transaction();
+        queryModel.setAccountId(accountId);
+        Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
+        expressionAttributeValues.put(":accountId", new AttributeValue().withS(accountId));
+        expressionAttributeValues.put(":startPostedDate", new AttributeValue().withS(DateConverter.getIso8601Timestamp(startTime)));
+        expressionAttributeValues.put(":endPostedDate", new AttributeValue().withS(DateConverter.getIso8601Timestamp(endTime)));
+        List<cardsystem.database.models.Transaction> results = new DynamoDBCommunicator().query(
+                cardsystem.database.models.Transaction.class,
+                new DynamoDBQueryExpression<cardsystem.database.models.Transaction>()
+                        .withKeyConditionExpression("accountId = :accountId and postedDate >= :startPostedDate and postedDate < :endPostedDate")
+                        .withExpressionAttributeValues(expressionAttributeValues)
+        );
+        List<Transaction> transactions = new ArrayList<>();
+        for (cardsystem.database.models.Transaction transactionModel : results) {
+            Transaction transaction = loadTransactionFromDatabaseModel(transactionModel);
+            if (transaction != null) {
+                transactions.add(transaction);
+            }
+        }
+        return transactions;
+    }
+
+    private static Transaction loadTransactionFromDatabaseModel(cardsystem.database.models.Transaction transaction) {
+        TransactionType transactionType = TransactionType.valueOf(transaction.getTransactionType());
+        Transaction loadedTransaction;
+        switch (transactionType) {
+            case CASH_ADVANCE:
+                loadedTransaction = loadCashAdvance(transaction);
+                break;
+            case MERCHANT:
+                loadedTransaction = loadMerchantTransaction(transaction);
+                break;
+            case PAYMENT:
+                loadedTransaction = loadPayment(transaction);
+                break;
+            case REFUND:
+                loadedTransaction = loadRefund(transaction);
+                break;
+            default:
+                return null;
+        }
+        return loadedTransaction;
     }
 
     public static CashAdvance loadCashAdvance(cardsystem.database.models.Transaction transaction) {
