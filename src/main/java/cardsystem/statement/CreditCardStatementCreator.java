@@ -1,19 +1,28 @@
 package cardsystem.statement;
 
+import cardsystem.rewards.RewardCalculator;
 import cardsystem.transaction.Transaction;
+import cardsystem.transaction.TransactionFetcher;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreditCardStatementCreator implements StatementCreator {
 
     @Override
     public CreditCardStatement createStatement(String accountId, StatementPeriod statementPeriod) {
-        // TODO - fetch transactions and calculate balance and rewards from them
-        int balance = 0;
-        List<Transaction> transactions = new ArrayList<>();
-        int statementRewards = 0;
-        return new CreditCardStatement(balance, transactions, statementPeriod, statementRewards);
+        double balance = StatementFetcher.getLatestStatement(accountId).getBalance();
+        List<Transaction> transactions = TransactionFetcher.loadPostedTransactions(
+                accountId,
+                statementPeriod.getStartDate().atStartOfDay(),
+                statementPeriod.getStartDate().atStartOfDay()
+        );
+        for (Transaction transaction: transactions) {
+            balance += transaction.getAmount();
+        }
+        int statementRewards = new RewardCalculator().calculateRewardPoints(transactions);
+        CreditCardStatement statement = new CreditCardStatement(accountId, balance, transactions, statementPeriod, statementRewards);
+        statement.saveToDatabase();
+        return statement;
     }
 
 }

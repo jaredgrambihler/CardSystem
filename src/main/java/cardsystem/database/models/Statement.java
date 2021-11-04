@@ -4,11 +4,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
+import java.math.BigDecimal;
+
 @DynamoDBTable(tableName = "Statement")
 public class Statement {
   private String accountId;
-  private String rewards;
-  private Integer balance;
+  private int rewards;
+  private BigDecimal balance;
   private String startDate;
   private String endDate;
   
@@ -22,18 +24,18 @@ public class Statement {
   }
   
   @DynamoDBAttribute(attributeName = "rewards")
-  public String getRewards() {
+  public int getRewards() {
     return rewards;
   }
-  public void setRewards(String rewards) {
+  public void setRewards(int rewards) {
     this.rewards = rewards;
   }
 
   @DynamoDBAttribute(attributeName = "balance")
-  public Integer getBalance() {
+  public BigDecimal getBalance() {
     return balance;
   }
-  public void setBalance(Integer balance) {
+  public void setBalance(BigDecimal balance) {
     this.balance = balance;
   } 
 

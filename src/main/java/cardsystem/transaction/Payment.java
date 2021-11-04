@@ -1,12 +1,12 @@
 package cardsystem.transaction;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class Payment extends Transaction {
 
-    public Payment(String id, double amount, Date transactionDate, Optional<Date> postedDate) {
-        super(id, amount, transactionDate, postedDate);
+    public Payment(String id, String accountId, double amount, LocalDateTime transactionDate, Optional<LocalDateTime> postedDate) {
+        super(id, accountId, amount, transactionDate, postedDate);
     }
 
     @Override
