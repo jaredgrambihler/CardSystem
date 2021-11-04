@@ -22,4 +22,11 @@ public class ExperianCreditReport implements CreditReport {
     public int getTotalCreditLines() {
         return creditLines;
     }
+
+    protected cardsystem.database.models.CreditBureau createDatabaseModel() {
+        cardsystem.database.models.CreditBureau experianCreditReport = new cardsystem.database.models.CreditBureau();
+        experianCreditReport.setSsn(getSsn());
+        experianCreditReport.setScore(getScore());
+        experianCreditReport.setCreditLines(getCreditLines());
+    }
 }

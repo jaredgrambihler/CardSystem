@@ -8,8 +8,8 @@ import java.util.List;
 
 @DynamoDBTable(tableName = "CreditBureau")
 public class CreditBureau {
-  private Integer score;
   private String ssn;
+  private Integer score;
   private List<Integer> creditLines;
   
   @DynamoDBHashKey(attributeName = "ssn")
