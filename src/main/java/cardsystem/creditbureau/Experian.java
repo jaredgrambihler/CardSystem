@@ -8,7 +8,7 @@ public class Experian implements CreditBureau {
         // dummy values
         // TODO database check with 'creditReport'
         int score = 600;
-        int creditLines = 10000;
+        List<Integer> creditLines = 10000;
         return new ExperianCreditReport(score, ssn, creditLines);    
     }
 
@@ -16,7 +16,7 @@ public class Experian implements CreditBureau {
         // dummy values
         // TODO database check with 'creditReport'
         int score = 600;
-        int creditLines = 10000;
+        List<Integer> creditLines = 10000;
         return new ExperianCreditReport(score, ssn, creditLines);
     }
 }

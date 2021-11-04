@@ -15,14 +15,6 @@ public class ExperianCreditReport implements CreditReport {
         this.totalCreditLines = totalCreditLines.sum(creditLines);
     }
 
-    public int sum(List<Integer> list) {
-        int sum = 0;
-        for (int i : list) {
-            sum += i;
-        }
-        return sum;
-    }
-
     public int getScore() {
         return score;
     }
@@ -31,7 +23,10 @@ public class ExperianCreditReport implements CreditReport {
         return ssn;
     }
     
-    public int getTotalCreditLines() {
+    public int getTotalCreditLines(List<Integer> list) {
+        for (int i : list) {
+            totalCreditLines += i;
+        }
         return totalCreditLines;
     }
 
