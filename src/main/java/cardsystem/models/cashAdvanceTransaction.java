@@ -1,12 +1,10 @@
 package cardsystem.models;
 
-import java.time.LocalDateTime;
-
-public class cashAdvanceTransaction {
+public class CashAdvanceTransaction {
      private String accountId;
      private double amount;
-     private LocalDateTime transactionDate;
-     private LocalDateTime postedDate;
+     private String transactionDate;
+     private String postedDate;
 
 
     public String getAccountId() {
@@ -25,19 +23,19 @@ public class cashAdvanceTransaction {
         this.amount = amount;
     }
 
-    public LocalDateTime getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 
-    public LocalDateTime getPostedDate() {
+    public String getPostedDate() {
         return postedDate;
     }
 
-    public void setPostedDate(LocalDateTime postedDate) {
+    public void setPostedDate(String postedDate) {
         this.postedDate = postedDate;
     }
 }

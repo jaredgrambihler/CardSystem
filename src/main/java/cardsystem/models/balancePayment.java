@@ -1,13 +1,11 @@
 package cardsystem.models;
 
-import java.time.LocalDateTime;
-
-public class balancePayment {
+public class BalancePayment {
      private String id;
      private String accountId;
      private double amount;
-     private LocalDateTime transactionDate;
-     private LocalDateTime postedDate;
+     private String transactionDate;
+     private String postedDate;
 
      public String getId(){
          return id;
@@ -33,19 +31,19 @@ public class balancePayment {
         this.amount = amount;
     }
 
-    public LocalDateTime getTransactionDate() {
+    public String getTransactionDate() {
         return transactionDate;
     }
 
-    public void setTransactionDate(LocalDateTime transactionDate) {
+    public void setTransactionDate(String transactionDate) {
         this.transactionDate = transactionDate;
     }
 
-    public LocalDateTime getPostedDate() {
+    public String getPostedDate() {
         return postedDate;
     }
 
-    public void setPostedDate(LocalDateTime postedDate) {
+    public void setPostedDate(String postedDate) {
         this.postedDate = postedDate;
     }
 }

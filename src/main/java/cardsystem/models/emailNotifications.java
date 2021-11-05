@@ -1,6 +1,6 @@
 package cardsystem.models;
 
-public class emailNotifications {
+public class EmailNotifications {
     private String emailAddress;
     private String accountId;
 
