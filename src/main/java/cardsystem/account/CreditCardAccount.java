@@ -1,9 +1,11 @@
 package cardsystem.account;
 
+import cardsystem.database.DynamoDBCommunicator;
+
 public class CreditCardAccount implements Account {
 	private String accountName;
 	private String accountId;
-	private String accountNr;
+	private String accountNumber;
 	private String userId; 
 	
 	/**
@@ -13,10 +15,10 @@ public class CreditCardAccount implements Account {
 	 * @param accountNr the account number
 	 * @param userId the id of the user who owns the account
 	 */
-	public CreditCardAccount(String accountName, String accountId, String accountNr, String userId) {
+	public CreditCardAccount(String accountName, String accountId, String accountNumber, String userId) {
 		this.accountName = accountName;
 		this.accountId = accountId;
-		this.accountNr = accountNr;
+		this.accountNumber = accountNumber;
 		this.userId = userId;
 	}
 
@@ -31,13 +33,30 @@ public class CreditCardAccount implements Account {
 	}
 
 	@Override
-	public String getAccountNr() {
-		return accountNr;
+	public String getAccountNumber() {
+		return accountNumber;
 	}
 
 	@Override
 	public String getUserId() {
 		return userId;
+	}
+	
+	public void saveToDatabase() {
+        new DynamoDBCommunicator().save(createDatabaseModel());
+	}
+
+	/**
+	 * Create the database model.
+	 * @return database model object with fields populated
+	 */
+	protected cardsystem.database.models.Account createDatabaseModel() {
+	    cardsystem.database.models.Account account = new cardsystem.database.models.Account();
+	    account.setAccountName(getAccountName());
+	    account.setAccountId(getAccountId());
+	    account.setAccountNumber(getAccountNumber());
+	    account.setUserId(getUserId());
+	    return account;
 	}
 
 
