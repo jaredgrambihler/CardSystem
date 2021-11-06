@@ -13,7 +13,9 @@ public class UserCreator {
 	public Optional<User> createNewUser(String name, String ssn, String email, BigInteger income, LocalDate birthDate) {
 		int age = (Period.between(LocalDate.of(birthDate.getYear(), birthDate.getMonth(), birthDate.getDayOfMonth()), LocalDate.now())).getYears();
 		if (UserApprover.isApproved(age, ssn, email)) { 
-			return Optional.of(new User(name, ssn, createUserId(), email, income, birthDate));
+			User user = new User(name, ssn, createUserId(), email, income, birthDate);
+			user.saveToDatabase();
+			return Optional.of(user);
 		}
 		return Optional.empty();
 	}
