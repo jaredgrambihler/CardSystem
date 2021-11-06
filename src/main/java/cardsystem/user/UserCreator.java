@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
+import java.util.UUID;
 
 import cardsystem.approval.UserApprover;
 
@@ -18,14 +19,14 @@ public class UserCreator {
 	}
 	
 	public String createUserId() {
-		// TODO - implement unique id with database check
-		return "xyz";
+		// create unique ID's until one is created without collision
+        // collisions should rarely, if ever, occur
+        while(true) {
+            String userId = UUID.randomUUID().toString();
+            if (UserFetcher.loadUser(userId).isEmpty()) {
+                return userId;
+            }
+        }
 	}
 	
-	public User userLogin(String loginArg) {
-		// TODO - implement user login
-		return null;
-	}
-	
-
 }
