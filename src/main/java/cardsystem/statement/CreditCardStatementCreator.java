@@ -5,12 +5,17 @@ import cardsystem.transaction.Transaction;
 import cardsystem.transaction.TransactionFetcher;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CreditCardStatementCreator implements StatementCreator {
 
     @Override
     public CreditCardStatement createStatement(String accountId, StatementPeriod statementPeriod) {
-        double balance = StatementFetcher.getLatestStatement(accountId).getBalance();
+        Optional<Statement> latestStatement = new CreditCardStatementFetcher().getLatestStatement(accountId);
+        double balance = 0;
+        if (latestStatement.isPresent()) {
+            balance = latestStatement.get().getBalance();
+        }
         List<Transaction> transactions = TransactionFetcher.loadPostedTransactions(
                 accountId,
                 statementPeriod.getStartDate().atStartOfDay(),
