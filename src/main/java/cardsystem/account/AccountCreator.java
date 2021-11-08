@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import cardsystem.approval.UserApprover;
+import cardsystem.database.DynamoDBCommunicator;
 
 public class AccountCreator {
 	
@@ -27,8 +28,21 @@ public class AccountCreator {
         }
 	}
 	
+	// Close account by appending " - CLOSED" to account name 
 	public void closeAccount(String accountId) {
-		// TODO - implement account closure with database
+		Optional<cardsystem.database.models.Account> databaseAccount = AccountFetcher.loadAccountDatabaseModel(accountId);
+		Optional<CreditCardAccount> creditCardAccount = AccountFetcher.loadCreditCardAccount(accountId);
+		if (databaseAccount.isPresent()) {
+			cardsystem.database.models.Account foundAccount = databaseAccount.get();
+			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
+			foundAccount.setAccountName(closedAccountName);
+			new DynamoDBCommunicator().save(foundAccount);
+		}
+		if (creditCardAccount.isPresent()) {
+			CreditCardAccount foundAccount = creditCardAccount.get();
+			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
+			foundAccount.setAccountName(closedAccountName);
+		}
 	}
 	
 }

@@ -28,6 +28,11 @@ public class CreditCardAccount implements Account {
 	}
 
 	@Override
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	@Override
 	public String getAccountId() {
 		return accountId;
 	}
@@ -58,6 +63,5 @@ public class CreditCardAccount implements Account {
 	    account.setUserId(getUserId());
 	    return account;
 	}
-
 
 }

@@ -19,7 +19,7 @@ public class CreditCardStatementCreator implements StatementCreator {
         for (Transaction transaction: transactions) {
             balance += transaction.getAmount();
         }
-        int statementRewards = new RewardCalculator().calculateRewardPoints(transactions);
+        int statementRewards = new RewardCalculator().calculateRewardPoints(transactions, accountId);
         CreditCardStatement statement = new CreditCardStatement(accountId, balance, transactions, statementPeriod, statementRewards);
         statement.saveToDatabase();
         return statement;

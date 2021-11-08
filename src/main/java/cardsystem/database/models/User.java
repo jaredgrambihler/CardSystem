@@ -1,5 +1,7 @@
 package cardsystem.database.models;
 
+import java.math.BigInteger;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
@@ -9,7 +11,7 @@ public class User {
   private String name;
   private String userId;
   private String birthDate;
-  private Integer income;
+  private BigInteger income;
   private String emailAddress;
   private String ssn;
   
@@ -39,10 +41,10 @@ public class User {
   }
 
   @DynamoDBAttribute(attributeName = "income")
-  public Integer getIncome() {
+  public BigInteger getIncome() {
     return income;
   }
-  public void setIncome(Integer income) {
+  public void setIncome(BigInteger income) {
     this.income = income;
   } 
 
