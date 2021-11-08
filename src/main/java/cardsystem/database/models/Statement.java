@@ -2,6 +2,7 @@ package cardsystem.database.models;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 import java.math.BigDecimal;
@@ -15,7 +16,6 @@ public class Statement {
   private String endDate;
   
   @DynamoDBHashKey(attributeName = "accountId")
-  @DynamoDBAttribute
   public String getAccountId() {
     return accountId;
   }
@@ -47,7 +47,7 @@ public class Statement {
     this.startDate = startDate;
   }
 
-  @DynamoDBAttribute(attributeName = "endDate")
+  @DynamoDBRangeKey(attributeName = "endDate")
   public String getEndDate() {
     return endDate;
   }

@@ -1,16 +1,9 @@
 package cardsystem.statement;
 
-import java.time.Month;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
-public class StatementFetcher {
-
-    public static Statement getLatestStatement(String accountId) {
-        // TODO - fetch from db
-        return null;
-    }
-
-    public static Statement getStatement(String accountId, Month month) {
-        // TODO - fetch from db
-        return null;
-    }
+public interface StatementFetcher {
+     Optional<Statement> getLatestStatement(String accountId);
+     Optional<Statement> getStatement(String accountId, LocalDateTime localDateTime);
 }
