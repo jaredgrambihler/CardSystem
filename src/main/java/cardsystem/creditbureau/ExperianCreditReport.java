@@ -1,25 +1,26 @@
 package cardsystem.creditbureau;
 
 import java.util.List;
+import cardsystem.database.DynamoDBCommunicator;
 
 public class ExperianCreditReport implements CreditReport {
-    int score;
     String ssn;
+    int score;
     int totalCreditLines;
     List<Integer> creditLines;
 
-    public ExperianCreditReport (int score, String ssn, List<Integer> creditLines) {
-        this.score = score;
+    public ExperianCreditReport (String ssn, int score, List<Integer> creditLines) {
         this.ssn = ssn;
+        this.score = score;
         this.creditLines = creditLines;
-    }
-
-    public int getScore() {
-        return score;
     }
 
     public String getSSN() {
         return ssn;
+    }
+
+    public int getScore() {
+        return score;
     }
     
     public int getTotalCreditLines() {
@@ -31,6 +32,10 @@ public class ExperianCreditReport implements CreditReport {
 
     public List<Integer> getCreditLines() {
         return creditLines;
+    }
+
+    public void saveToDatabase() {
+        new DynamoDBCommunicator().save(createDatabaseModel());
     }
 
     protected cardsystem.database.models.CreditBureau createDatabaseModel() {
