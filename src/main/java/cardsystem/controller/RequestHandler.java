@@ -1,25 +1,15 @@
 package cardsystem.controller;
 
+import cardsystem.account.AccountCreator;
+import cardsystem.account.CreditCardAccount;
 import cardsystem.email.Email;
-import cardsystem.models.AccountApply;
-import cardsystem.models.AccountClosure;
-import cardsystem.models.AccountCreation;
-import cardsystem.models.AccountLogin;
-import cardsystem.models.AccountLoginResponse;
-import cardsystem.models.BalanceCheck;
-import cardsystem.models.BalancePayment;
-import cardsystem.models.CashAdvanceTransaction;
-import cardsystem.models.CheckCreditLine;
-import cardsystem.models.CreditLimitCheck;
-import cardsystem.models.EmailNotifications;
-import cardsystem.models.FetchStatementPeriod;
-import cardsystem.models.ListTransactions;
-import cardsystem.models.MakeStatement;
-import cardsystem.models.MakeTransaction;
+import cardsystem.models.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import java.util.Optional;
 
 public class RequestHandler {
 
@@ -63,14 +53,26 @@ public class RequestHandler {
         return jsonObject;
     }
 
-    private static AccountCreation getAccountCreation(String requestBody){
+    private static AccountCreationResponse getAccountCreation(String requestBody){
         AccountCreation accountCreation = gson.fromJson(requestBody, AccountCreation.class);
         String userId = accountCreation.getUserId();
         String accountName = accountCreation.getAccountName();
-        String accountNumber = accountCreation.getAccountId();
-        String accountId = accountCreation.getAccountId();
-        return accountCreation;
+        if (accountName == null || accountName.isEmpty()) {
+            accountName = "Credit Card Account";
+        }
+        int salary = accountCreation.getSalary();
+        Optional<CreditCardAccount> creditCardAccountOptional = new AccountCreator()
+                .createNewCreditCardAccount(accountName, userId, salary);
+        AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
+        if (creditCardAccountOptional.isPresent()) {
+            accountCreationResponse.setAccountNumber(creditCardAccountOptional.get().getAccountNumber());
+            accountCreationResponse.setIsApproved(true);
+        } else {
+            accountCreationResponse.setIsApproved(false);
+        }
+        return accountCreationResponse;
     }
+
     private static MakeStatement getMakeStatement(String requestBody) {
         MakeStatement makeStatement = gson.fromJson(requestBody, MakeStatement.class);
         String accountId = makeStatement.getAccountId();
@@ -148,24 +150,22 @@ public class RequestHandler {
         AccountLogin accountLogin = gson.fromJson(requestBody, AccountLogin.class);
         String emailAddress = accountLogin.getEmailAdress();
         String password = accountLogin.getPassword();
-        if (emailAddress || password) {
-            return null;
+        String authToken = "";
+        if (emailAddress != null && password != null) {
+            // TODO - fetch auth token
+            authToken = "MyAuthToken";
         }
-        // add null check, return some kind of error if a field isn't specified
-        // TODO - get auth token
-        String authToken = "myAuthToken";
         AccountLoginResponse accountLoginResponse = new AccountLoginResponse();
         accountLoginResponse.setAuthToken(authToken);
         return accountLoginResponse;
     }
 
-    private static AccountApply getAccountApply(String requestBody) {
+    private static AccountApplyResponse getAccountApply(String requestBody) {
         AccountApply accountApply = gson.fromJson(requestBody, AccountApply.class);
         int age = accountApply.getAge();
         String ssn = accountApply.getSsn();
         String validEmail = accountApply.getValidEmail();
-        AccountApplyResponse accountReplyResponse = new AccountReplyResponse();
-        accountReplyResponse.
+        AccountApplyResponse accountReplyResponse = new AccountApplyResponse();
         return accountReplyResponse;
     }
 
