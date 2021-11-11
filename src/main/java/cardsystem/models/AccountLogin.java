@@ -18,7 +18,7 @@ public class AccountLogin {
         return emailAddress;
     }
 
-    public void setEmailAddress(String emailAddres){
+    public void setEmailAddress(String emailAddress){
         this.emailAddress = emailAddress;
     }
     
