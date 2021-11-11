@@ -3,7 +3,7 @@ package cardsystem.models;
 public class AccountCreation {
     private String userId;
     private String accountName;
-    private String accountNr;
+    private String accountNumber;
     private String accountId;
 
     public String getUserId(){
@@ -22,12 +22,12 @@ public class AccountCreation {
         this.accountName = accountName;
     }
 
-    public String getAccountNr(){
-        return accountNr;
+    public String getAccountNumber(){
+        return accountNumber;
     }
 
-    public void setAccountNr(String accountNr){
-        this.accountNr = accountNr;
+    public void setAccountNr(String accountNumber){
+        this.accountNumber = accountNumber;
     }
 
     public String getAccountId(){
