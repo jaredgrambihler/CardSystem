@@ -1,6 +1,7 @@
 package cardsystem.account;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import cardsystem.approval.UserApprover;
@@ -8,9 +9,9 @@ import cardsystem.database.DynamoDBCommunicator;
 
 public class AccountCreator {
 	
-	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String accountNr, String userId, int salary) {
+	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String userId, int salary) {
 		if (UserApprover.isValidSalary(salary)) {
-			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), accountNr, userId);
+			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId);
 			creditCardAccount.saveToDatabase();
 			return Optional.of(creditCardAccount);
 		}
@@ -43,6 +44,15 @@ public class AccountCreator {
 			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
 			foundAccount.setAccountName(closedAccountName);
 		}
+	}
+
+	public String createNewAccountNumber() {
+		StringBuilder builder = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 15; i++) {
+			builder.append(random.nextInt(10));
+		}
+		return builder.toString();
 	}
 	
 }
