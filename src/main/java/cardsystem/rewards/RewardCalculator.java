@@ -8,9 +8,6 @@ import cardsystem.transaction.MerchantTransaction;
 import cardsystem.transaction.Transaction;
 
 public class RewardCalculator {
-	private int rewardPoints;
-	private String accountId;
-	
 	
 	// Calculate and return reward points from list of transactions
 	// If the account doesn't have any previous reward points, a new db reward object is created
@@ -20,9 +17,7 @@ public class RewardCalculator {
 		if (previousRewardPoints >= 0) {
 			updateRewardPointsInDatabase(accountId, (rewardPoints + previousRewardPoints));
 		} else {
-			this.rewardPoints = rewardPoints;
-			this.accountId = accountId;
-			saveToDatabase();
+			saveToDatabase(rewardPoints, accountId);
 		}
 		return rewardPoints;
 	}
@@ -66,15 +61,15 @@ public class RewardCalculator {
 		}
 	}
 	
-	public void saveToDatabase() {
-		new DynamoDBCommunicator().save(createDatabaseModel());
+	public void saveToDatabase(int rewardPoints, String accountId) {
+		new DynamoDBCommunicator().save(createDatabaseModel(rewardPoints, accountId));
 	}
 
     /**
      * Create the database model.
      * @return database model object with fields populated
      */
-    protected cardsystem.database.models.Reward createDatabaseModel() {
+    protected cardsystem.database.models.Reward createDatabaseModel(int rewardPoints, String accountId) {
         cardsystem.database.models.Reward reward = new cardsystem.database.models.Reward();
         reward.setRewardPoints(rewardPoints);
         reward.setAccountId(accountId);
