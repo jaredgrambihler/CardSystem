@@ -4,15 +4,41 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
+import cardsystem.approval.CreditLimit;
 import cardsystem.approval.UserApprover;
+import cardsystem.creditbureau.Experian;
+import cardsystem.creditbureau.ExperianCreditReport;
 import cardsystem.database.DynamoDBCommunicator;
+import cardsystem.user.User;
+import cardsystem.user.UserFetcher;
 
 public class AccountCreator implements AccountFactory {
 	
 	@Override
 	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String userId, int salary) {
 		if (UserApprover.isValidSalary(salary)) {
+			Experian creditBureau = new Experian();
+			Optional<User> user = UserFetcher.loadUser(userId);
+			
+			int userCreditLimit = 0;
+			
+			if (user.isPresent()) {
+				User accountOwner = user.get();
+				String ssn = accountOwner.getSsn();
+				ExperianCreditReport experian = creditBureau.getHardInquiry(ssn);
+				
+				CreditLimit creditLimit = new CreditLimit();
+				
+				// Unsure if this is the correct way to calculate totalCurrentCredit?
+				int totalCurrentCredit = 0;
+				for (int credit : experian.getCreditLines()) {
+					totalCurrentCredit += credit;
+				}
+				userCreditLimit = creditLimit.determineCreditLimit(salary, experian.getScore(), totalCurrentCredit);
+			}
+			
 			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId);
+			creditCardAccount.setCreditLimit(userCreditLimit);
 			creditCardAccount.saveToDatabase();
 			return Optional.of(creditCardAccount);
 		}

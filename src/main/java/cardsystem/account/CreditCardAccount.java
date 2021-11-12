@@ -6,7 +6,8 @@ public class CreditCardAccount implements Account {
 	private String accountName;
 	private String accountId;
 	private String accountNumber;
-	private String userId; 
+	private String userId;
+	private int creditLimit;
 	
 	/**
 	 * Create a credit card account
@@ -47,6 +48,16 @@ public class CreditCardAccount implements Account {
 		return userId;
 	}
 	
+	@Override
+	public int getCreditLimit() {
+		return this.creditLimit;
+	}
+	
+	@Override
+	public void setCreditLimit(int creditLimit) {
+		this.creditLimit = creditLimit;
+	}
+	
 	public void saveToDatabase() {
         new DynamoDBCommunicator().save(createDatabaseModel());
 	}
@@ -61,6 +72,7 @@ public class CreditCardAccount implements Account {
 	    account.setAccountId(getAccountId());
 	    account.setAccountNumber(getAccountNumber());
 	    account.setUserId(getUserId());
+	    account.setCreditLimit(getCreditLimit());
 	    return account;
 	}
 

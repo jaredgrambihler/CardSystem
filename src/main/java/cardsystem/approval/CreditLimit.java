@@ -1,13 +1,6 @@
 package cardsystem.approval;
 
-import cardsystem.account.Account;
-
 public class CreditLimit {
-
-public int getCreditLimit(Account account) {
-    return 9;
-     //Todo talk with database
-    }
 
  public int determineCreditLimit(int income, int creditScore, int totalCurrentCredit){
     if (creditScore < 700) {
