@@ -15,7 +15,7 @@ public class RewardCalculator {
 	// Calculate and return reward points from list of transactions
 	// If the account doesn't have any previous reward points, a new db reward object is created
 	public int createRewardPoints(List<Transaction> transactions, String accountId) {
-		int rewardPoints = calculateRewardPoints(transactions, accountId);
+		int rewardPoints = calculateRewardPoints(transactions);
 		int previousRewardPoints = RewardFetcher.getCurrentRewardPoints(accountId);
 		if (previousRewardPoints >= 0) {
 			updateRewardPointsInDatabase(accountId, (rewardPoints + previousRewardPoints));
@@ -27,7 +27,7 @@ public class RewardCalculator {
 		return rewardPoints;
 	}
 	
-	public int calculateRewardPoints(List<Transaction> transactions, String accountId) {
+	public int calculateRewardPoints(List<Transaction> transactions) {
 		int rewardPoints = 0;
 		for (Transaction t: transactions) {
 			if (t instanceof MerchantTransaction) {

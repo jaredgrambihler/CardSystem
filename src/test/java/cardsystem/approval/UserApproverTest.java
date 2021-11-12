@@ -18,7 +18,7 @@ public class UserApproverTest {
     private boolean expectedApproval;
 
     @Parameterized.Parameters
-    public static Collection primeNumbers() {
+    public static Collection getUsers() {
         return Arrays.asList(new Object[][] {
                 { 17, "123456789", "jim@gmail.com", false },
                 { 18, "12345678", "jim@gmail.com", false },
