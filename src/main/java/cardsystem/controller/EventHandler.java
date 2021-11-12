@@ -11,9 +11,9 @@ public class EventHandler {
     private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static String handleEvent(HashMap<String, Object> event) {
-        String action = (String) event.get("action");
-        String body = (String) event.get("body");
-        JsonObject responseJson = RequestHandler.handleRequest(action, body);
+        String action = (String) event.getOrDefault("action", "unknown");
+        String body = (String) event.getOrDefault("body", "");
+        Object responseJson = RequestHandler.handleRequest(action, body);
         return gson.toJson(responseJson);
     }
 

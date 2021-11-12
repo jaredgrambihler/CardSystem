@@ -3,8 +3,7 @@ package cardsystem.models;
 public class AccountCreation {
     private String userId;
     private String accountName;
-    private String accountNr;
-    private String accountId;
+    private int salary;
 
     public String getUserId(){
         return userId;
@@ -22,19 +21,11 @@ public class AccountCreation {
         this.accountName = accountName;
     }
 
-    public String getAccountNr(){
-        return accountNr;
+    public int getSalary() {
+        return salary;
     }
 
-    public void setAccountNr(String accountNr){
-        this.accountNr = accountNr;
-    }
-
-    public String getAccountId(){
-        return accountId;
-    }
-
-    public void setAccountId(String accountId){
-        this.accountId = accountId;
+    public void setSalary(int salary) {
+        this.salary = salary;
     }
 }

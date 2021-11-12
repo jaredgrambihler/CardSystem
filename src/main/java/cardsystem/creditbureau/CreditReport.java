@@ -4,4 +4,5 @@ public interface CreditReport {
     public int getScore();
     public String getSSN();
     public int getTotalCreditLines();
+    public void saveToDatabase();
 }

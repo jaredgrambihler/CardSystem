@@ -11,7 +11,7 @@ public enum MerchantCategory {
 	GENERAL("General");
 
     private String merchantType;
-    private static ArrayList<String> restaurants = new ArrayList<>(Arrays.asList("McDonald's", "Burger King", "Pizza Hut", "Domino's"));
+    private static ArrayList<String> restaurants = new ArrayList<>(Arrays.asList("McDonald's", "Burger King", "Pizza Hut", "Domino's Pizza"));
     private static ArrayList<String> clothingStores = new ArrayList<>(Arrays.asList("River Island", "Mango", "Zara", "H&M"));
     private static ArrayList<String> groceryStores = new ArrayList<>(Arrays.asList("Tesco", "Lidl", "Aldi", "Spar"));
     private static ArrayList<String> airlines = new ArrayList<>(Arrays.asList("Ryanair", "British Airways", "SAS", "American Airlines"));

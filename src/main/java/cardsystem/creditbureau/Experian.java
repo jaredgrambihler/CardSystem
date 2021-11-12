@@ -12,7 +12,7 @@ public class Experian implements CreditBureau {
         // TODO database check with 'creditReport'
         int score = 600;
         List<Integer> creditLines = Arrays.asList(10000);
-        return new ExperianCreditReport(score, ssn, creditLines);    
+        return new ExperianCreditReport(ssn, score, creditLines);    
     }
 
     public ExperianCreditReport getHardInquiry(String ssn){
@@ -20,6 +20,6 @@ public class Experian implements CreditBureau {
         // TODO database check with 'creditReport'
         int score = 600;
         List<Integer> creditLines = Arrays.asList(10000);
-        return new ExperianCreditReport(score, ssn, creditLines);
+        return new ExperianCreditReport(ssn, score, creditLines);
     }
 }

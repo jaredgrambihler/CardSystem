@@ -37,7 +37,7 @@ public class Transaction {
   public BigDecimal getAmount() {
     return amount;
   }
-  public void setAmount(BigDecimal accountNumber) {
+  public void setAmount(BigDecimal amount) {
     this.amount = amount;
   } 
 
