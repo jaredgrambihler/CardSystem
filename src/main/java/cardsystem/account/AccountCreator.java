@@ -1,23 +1,25 @@
 package cardsystem.account;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 import cardsystem.approval.UserApprover;
 import cardsystem.database.DynamoDBCommunicator;
 
-public class AccountCreator {
+public class AccountCreator implements AccountFactory {
 	
-	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String accountNr, String userId, int salary) {
+	@Override
+	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String userId, int salary) {
 		if (UserApprover.isValidSalary(salary)) {
-			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), accountNr, userId);
+			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId);
 			creditCardAccount.saveToDatabase();
 			return Optional.of(creditCardAccount);
 		}
 		return Optional.empty();
 	}
 	
-	public String createAccountId() {
+	private String createAccountId() {
 		// create unique ID's until one is created without collision
         // collisions should rarely, if ever, occur
         while(true) {
@@ -29,6 +31,7 @@ public class AccountCreator {
 	}
 	
 	// Close account by appending " - CLOSED" to account name 
+	@Override
 	public void closeAccount(String accountId) {
 		Optional<cardsystem.database.models.Account> databaseAccount = AccountFetcher.loadAccountDatabaseModel(accountId);
 		Optional<CreditCardAccount> creditCardAccount = AccountFetcher.loadCreditCardAccount(accountId);
@@ -43,6 +46,15 @@ public class AccountCreator {
 			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
 			foundAccount.setAccountName(closedAccountName);
 		}
+	}
+
+	public String createNewAccountNumber() {
+		StringBuilder builder = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 15; i++) {
+			builder.append(random.nextInt(10));
+		}
+		return builder.toString();
 	}
 	
 }

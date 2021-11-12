@@ -15,7 +15,7 @@ public class BalancePayment {
         this.id = id;
     }
 
-    public String accountId() {
+    public String getAccountId() {
         return accountId;
     }
 
