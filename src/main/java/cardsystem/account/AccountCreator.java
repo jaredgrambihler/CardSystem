@@ -17,32 +17,35 @@ public class AccountCreator implements AccountFactory {
 	@Override
 	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String userId, int salary) {
 		if (UserApprover.isValidSalary(salary)) {
-			Experian creditBureau = new Experian();
-			Optional<User> user = UserFetcher.loadUser(userId);
-			
-			int userCreditLimit = 0;
-			
-			if (user.isPresent()) {
-				User accountOwner = user.get();
-				String ssn = accountOwner.getSsn();
-				ExperianCreditReport experian = creditBureau.getHardInquiry(ssn);
-				
-				CreditLimit creditLimit = new CreditLimit();
-				
-				// Unsure if this is the correct way to calculate totalCurrentCredit?
-				int totalCurrentCredit = 0;
-				for (int credit : experian.getCreditLines()) {
-					totalCurrentCredit += credit;
-				}
-				userCreditLimit = creditLimit.determineCreditLimit(salary, experian.getScore(), totalCurrentCredit);
-			}
-			
 			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId);
-			creditCardAccount.setCreditLimit(userCreditLimit);
+			creditCardAccount.setCreditLimit(getUserCreditLimit(userId, salary));
 			creditCardAccount.saveToDatabase();
 			return Optional.of(creditCardAccount);
 		}
 		return Optional.empty();
+	}
+	
+	private int getUserCreditLimit(String userId, int salary) {
+		Experian creditBureau = new Experian();
+		Optional<User> user = UserFetcher.loadUser(userId);
+		
+		int userCreditLimit = 0;
+		
+		if (user.isPresent()) {
+			User accountOwner = user.get();
+			String ssn = accountOwner.getSsn();
+			ExperianCreditReport experian = creditBureau.getHardInquiry(ssn);
+			
+			CreditLimit creditLimit = new CreditLimit();
+			
+			// Unsure if this is the correct way to calculate totalCurrentCredit?
+			int totalCurrentCredit = 0;
+			for (int credit : experian.getCreditLines()) {
+				totalCurrentCredit += credit;
+			}
+			userCreditLimit = creditLimit.determineCreditLimit(salary, experian.getScore(), totalCurrentCredit);
+		}
+		return userCreditLimit;
 	}
 	
 	private String createAccountId() {
