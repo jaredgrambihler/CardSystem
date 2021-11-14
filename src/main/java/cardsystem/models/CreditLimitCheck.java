@@ -26,7 +26,7 @@ public class CreditLimitCheck {
         return creditScore;
     }
 
-    public void setAccountId(int creditScore){
+    public void setCreditScore(int creditScore){
         this.creditScore = creditScore;
     }
 

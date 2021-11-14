@@ -12,6 +12,5 @@ public class CreditLimit {
             Math.round(newCreditLimit);
             return newCreditLimit;
         }
-
     }
 }

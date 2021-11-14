@@ -1,9 +1,15 @@
 package cardsystem.controller;
 
 import cardsystem.account.AccountCreator;
+import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
+import cardsystem.approval.CreditLimit;
+import cardsystem.creditbureau.Experian;
+import cardsystem.creditbureau.ExperianCreditReport;
 import cardsystem.email.Email;
 import cardsystem.models.*;
+import cardsystem.user.User;
+import cardsystem.user.UserFetcher;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -112,12 +118,23 @@ public class RequestHandler {
         return accountClosure;
     }
 
+    // What is this method looking for? CreditLimitCheck is not containing credit limit
     private static CreditLimitCheck getCreditLimitCheck(String requestBody) {
         CreditLimitCheck creditLimitCheck = gson.fromJson(requestBody, CreditLimitCheck.class);
         String accountId = creditLimitCheck.getAccountId();
         String ssn = creditLimitCheck.getSsn();
         int creditScore = creditLimitCheck.getCreditScore();
         int salary = creditLimitCheck.getSalary();
+        
+        Optional<CreditCardAccount> creditCardAccountOptional = AccountFetcher.loadCreditCardAccount(accountId);
+        if (creditCardAccountOptional.isPresent()) {
+        	// Want to add credit limit to some attribute and return?
+        } 
+        
+        creditLimitCheck.setAccountId(accountId);
+        creditLimitCheck.setSsn(ssn);
+        creditLimitCheck.setSalary(salary);
+        
         return creditLimitCheck;
     }
 
