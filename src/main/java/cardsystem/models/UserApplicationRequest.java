@@ -1,6 +1,6 @@
 package cardsystem.models;
 
-public class AccountApply {
+public class UserApplicationRequest {
     private int age;
     private String ssn;
     private String validEmail;
