@@ -8,11 +8,18 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Balance")
 public class Balance {
+    private String accountId;
     private BigDecimal balance;
-    private double transaction;
 
-    @DynamoDBHashKey(attributeName = "balance")
-    @DynamoDBAttribute
+    @DynamoDBHashKey(attributeName = "accountId")
+    public String getAccountId() {
+        return accountId;
+    }
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    @DynamoDBAttribute(attributeName = "balance")
     public BigDecimal getBalance() {
         return balance;
     }
@@ -21,11 +28,5 @@ public class Balance {
         this.balance = balance;
     }
 
-    @DynamoDBAttribute(attributeName = "transaction")
-    public Double getTransaction() {
-        return transaction;
-    }
-    public void setTransaction(Double transaction) {
-        this.transaction = transaction;
-    }
+
 }
