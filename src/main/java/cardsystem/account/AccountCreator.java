@@ -59,11 +59,13 @@ public class AccountCreator implements AccountFactory {
 		String emailAddress = "Not found";
 		if (user.isPresent()) {
 			emailAddress = user.get().getEmailAddress();
+			if (emailAddress != null) {
+				Email email = new EmailFactory().getAccountEmail(account, emailAddress, "Account Closure", 
+						"You have successfully closed the account '" + account.getAccountNumber() + "' with the name '" 
+								+ account.getAccountName() + "'.");
+				new AwsSesEmailSender().send(email);
+			}
 		}
-		Email email = new EmailFactory().getAccountEmail(account, emailAddress, "Account Closure", 
-				"You have successfully closed the account '" + account.getAccountNumber() + "' with the name '" 
-						+ account.getAccountName() + "'.");
-		new AwsSesEmailSender().send(email);
 	}
 	
 	public String createNewAccountNumber() {
