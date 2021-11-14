@@ -1,6 +1,6 @@
 package cardsystem.email;
 
-public class AwsEmailSenderFactory implements EmailSenderFactory {
+public class DefaultEmailSenderFactory implements EmailSenderFactory {
 
     public EmailSender getEmailSender() {
         return new AwsSesEmailSender();
