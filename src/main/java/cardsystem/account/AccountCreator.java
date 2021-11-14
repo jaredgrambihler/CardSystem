@@ -56,14 +56,13 @@ public class AccountCreator implements AccountFactory {
 
 	private void sendAccountClosureEmail(Account account) {
 		Optional<User> user = UserFetcher.loadUser(account.getUserId());
-		String emailAddress = "Not found";
 		if (user.isPresent()) {
-			emailAddress = user.get().getEmailAddress();
+			String emailAddress = user.get().getEmailAddress();
 			if (emailAddress != null) {
 				Email email = new EmailFactory().getAccountEmail(account, emailAddress, "Account Closure", 
 						"You have successfully closed the account '" + account.getAccountNumber() + "' with the name '" 
 								+ account.getAccountName() + "'.");
-				new AwsSesEmailSender().send(email);
+				new DefaultEmailSenderFactory().getEmailSender().send(email);
 			}
 		}
 	}
