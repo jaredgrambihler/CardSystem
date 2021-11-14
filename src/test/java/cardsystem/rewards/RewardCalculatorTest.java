@@ -1,7 +1,8 @@
 package cardsystem.rewards;
 
-import cardsystem.transaction.MerchantTransaction;
 import cardsystem.transaction.Transaction;
+import cardsystem.transaction.TransactionImpl;
+import cardsystem.transaction.TransactionType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -70,7 +71,7 @@ public class RewardCalculatorTest {
      * This method is used for testing to avoid saving to the db that occurs when transactions are typically created.
      * @return a merchant transaction
      */
-    private static MerchantTransaction createMerchantTransaction(String merchant, double amount) {
-        return new MerchantTransaction("fakeId1234", "fakeAccountId1234", amount, LocalDateTime.now(), Optional.empty(), merchant);
+    private static Transaction createMerchantTransaction(String merchant, double amount) {
+        return new TransactionImpl("fakeId1234", "fakeAccountId1234", amount, merchant, LocalDateTime.now(), Optional.empty(), TransactionType.MERCHANT);
     }
 }
