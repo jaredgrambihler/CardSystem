@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.*;
-import java.util.HashMap;
 import java.nio.charset.Charset;
 import java.lang.IllegalStateException;
 
@@ -26,9 +25,6 @@ public class HandlerStream implements RequestStreamHandler {
         PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(outputStream, Charset.forName("US-ASCII"))));
         try
         {
-            HashMap event = gson.fromJson(reader, HashMap.class);
-            logger.log("STREAM TYPE: " + inputStream.getClass().toString());
-            logger.log("EVENT TYPE: " + event.getClass().toString());
             String responseString = EventHandler.handleEvent(getStringFromReader(reader));
             writer.write(responseString);
             if (writer.checkError())
@@ -47,7 +43,7 @@ public class HandlerStream implements RequestStreamHandler {
         }
     }
 
-    private String getStringFromReader(Reader reader) throws IOException {
+    public String getStringFromReader(Reader reader) throws IOException {
         StringBuilder builder = new StringBuilder();
         int curChar;
         while ((curChar = reader.read()) != -1) {
