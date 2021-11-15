@@ -6,28 +6,15 @@ import java.util.UUID;
 
 public class TransactionCreator {
 
-    public Transaction createCashAdvanceTransaction(String accountId, double amount, LocalDateTime transactionDate) {
-        Transaction transaction = new CashAdvance(createTransactionId(), accountId, amount, transactionDate, Optional.empty());
+    public Optional<Transaction> createTransaction(String accountId, double amount, String counterparty, TransactionType transactionType, LocalDateTime transactionDate) {
+        if (!transactionType.isValidAmount(amount)) {
+            return Optional.empty();
+        }
+        // TODO - check account balance is sufficient
+        Transaction transaction = new TransactionImpl(createTransactionId(), accountId, amount,
+                counterparty, transactionDate, Optional.empty(), transactionType);
         transaction.saveToDatabase();
-        return transaction;
-    }
-
-    public Transaction createMerchantTransaction(String accountId, double amount, LocalDateTime transactionDate, String merchant) {
-        Transaction transaction = new MerchantTransaction(createTransactionId(), accountId, amount, transactionDate, Optional.empty(), merchant);
-        transaction.saveToDatabase();
-        return transaction;
-    }
-
-    public Transaction createPayment(String accountId, double amount, LocalDateTime transactionDate) {
-        Transaction transaction = new Payment(createTransactionId(), accountId, amount, transactionDate, Optional.empty());
-        transaction.saveToDatabase();
-        return transaction;
-    }
-
-    public Transaction createRefund(String accountId, double amount, LocalDateTime transactionDate) {
-        Transaction transaction = new Refund(createTransactionId(), accountId, amount, transactionDate, Optional.empty());
-        transaction.saveToDatabase();
-        return transaction;
+        return Optional.of(transaction);
     }
 
     private String createTransactionId() {

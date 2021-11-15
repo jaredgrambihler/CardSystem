@@ -14,7 +14,7 @@ public class Transaction {
   private String transactionDate;
   private String postedDate;
   private String transactionType;
-  private String merchant;
+  private String counterparty;
   
   @DynamoDBHashKey(attributeName = "transactionId")
   @DynamoDBAttribute
@@ -65,12 +65,12 @@ public class Transaction {
     this.transactionType = transactionType;
   }
 
-  @DynamoDBAttribute(attributeName = "merchant")
-  public String getMerchant() {
-    return merchant;
+  @DynamoDBAttribute(attributeName = "counterparty")
+  public String getCounterparty() {
+    return counterparty;
   }
-  public void setMerchant(String merchant) {
-    this.merchant = merchant;
+  public void setCounterparty(String counterparty) {
+    this.counterparty = counterparty;
   }
 
 }
