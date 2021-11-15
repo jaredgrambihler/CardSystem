@@ -52,7 +52,7 @@ public class RewardCalculator {
 		return rewardPoints;
 	}
 	
-	private void updateRewardPointsInDatabase(String accountId, int points) {
+	public void updateRewardPointsInDatabase(String accountId, int points) {
 		Optional<cardsystem.database.models.Reward> reward = RewardFetcher.loadRewardDatabaseModel(accountId);
 		if (reward.isPresent()) {
 			cardsystem.database.models.Reward foundReward = reward.get();

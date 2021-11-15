@@ -4,6 +4,8 @@ import cardsystem.account.AccountCreator;
 import cardsystem.account.CreditCardAccount;
 import cardsystem.email.Email;
 import cardsystem.models.*;
+import cardsystem.rewards.RewardFetcher;
+import cardsystem.rewards.RewardRedeemer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,6 +48,8 @@ public class RequestHandler {
             jsonObject = getAccountApply(requestBody);
         case "AccountCreation":
             jsonObject = getAccountCreation(requestBody);
+        case "RedeemRewards":
+        	jsonObject = getRedeemRewards(requestBody);
         default:
             // Unknown action
             break;
@@ -53,7 +57,7 @@ public class RequestHandler {
         return jsonObject;
     }
 
-    private static AccountCreationResponse getAccountCreation(String requestBody){
+	private static AccountCreationResponse getAccountCreation(String requestBody){
         AccountCreation accountCreation = gson.fromJson(requestBody, AccountCreation.class);
         String userId = accountCreation.getUserId();
         String accountName = accountCreation.getAccountName();
@@ -187,4 +191,21 @@ public class RequestHandler {
         String merchant = makeTransaction.getMerchant();
         return makeTransaction;
     }
+    
+    private static RedeemRewardsResponse getRedeemRewards(String requestBody) {
+		RedeemRewardsRequest redeemRewardsRequest = gson.fromJson(requestBody, RedeemRewardsRequest.class);
+		String accountId = redeemRewardsRequest.getAccountId();
+		int amount = redeemRewardsRequest.getAmount();
+		
+		RedeemRewardsResponse redeemRewardsResponse = new RedeemRewardsResponse();
+		int previousRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+		new RewardRedeemer().redeemPoints(amount, accountId);
+		int updatedRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+		if (updatedRewards == previousRewards - amount) {
+			redeemRewardsResponse.setRedeemed(true);
+		} else {
+			redeemRewardsResponse.setRedeemed(false);
+		}
+		return redeemRewardsResponse;
+	}
 }
