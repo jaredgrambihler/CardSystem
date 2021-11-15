@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import javax.print.attribute.standard.JobStateReasons;
 import java.util.Optional;
 
 public class RequestHandler {
@@ -18,37 +19,56 @@ public class RequestHandler {
     public static Object handleRequest(String action, String requestBody) {
         Object jsonObject = new JsonObject();
         switch (action) {
-        case "BalancePayment":
-            jsonObject = getBalancePayment(requestBody);
-        case "MerchantTransaction":
-            jsonObject = getMakeTransaction(requestBody);
-        case "CashAdvanceTransaction":
-            jsonObject = getCashAdvanceTransaction(requestBody);
-        case "CheckBalance":
-            jsonObject = getBalanceCheck(requestBody);
-        case "CheckCreditLine":
-            jsonObject = getCheckCreditLine(requestBody);
-        case "CreditLimitCheck":
-            jsonObject = getCreditLimitCheck(requestBody);
-        case "ListTransactions":
-            jsonObject = getListTransactions(requestBody);
-        case "FetchStatementPeriod":
-            jsonObject = getFetchStatementPeriod(requestBody);
-        case "EmailNotifications":
-            jsonObject = getEmailNotifications(requestBody);
-        case "AccountLogin":
-            jsonObject = getAccountLoginResponse(requestBody);
-        case "AccountClosure":
-            jsonObject = getAccountClosure(requestBody);
-        case "CreateStatement":
-            jsonObject = getMakeStatement(requestBody);
-        case "AccountApply":
-            jsonObject = getAccountApply(requestBody);
-        case "AccountCreation":
-            jsonObject = getAccountCreation(requestBody);
-        default:
-            // Unknown action
-            break;
+            case "BalancePayment":
+                jsonObject = getBalancePayment(requestBody);
+                break;
+            case "MerchantTransaction":
+                jsonObject = getMakeTransaction(requestBody);
+                break;
+            case "CashAdvanceTransaction":
+                jsonObject = getCashAdvanceTransaction(requestBody);
+                break;
+            case "CheckBalance":
+                jsonObject = getBalanceCheck(requestBody);
+                break;
+            case "CheckCreditLine":
+                jsonObject = getCheckCreditLine(requestBody);
+                break;
+            case "CreditLimitCheck":
+                jsonObject = getCreditLimitCheck(requestBody);
+                break;
+            case "ListTransactions":
+                jsonObject = getListTransactions(requestBody);
+                break;
+            case "FetchStatementPeriod":
+                jsonObject = getFetchStatementPeriod(requestBody);
+                break;
+            case "EmailNotifications":
+                jsonObject = getEmailNotifications(requestBody);
+                break;
+            case "AccountLogin":
+                jsonObject = getAccountLoginResponse(requestBody);
+                break;
+            case "AccountClosure":
+                jsonObject = getAccountClosure(requestBody);
+                break;
+            case "CreateStatement":
+                jsonObject = getMakeStatement(requestBody);
+                break;
+            case "AccountApply":
+                jsonObject = getAccountApply(requestBody);
+                break;
+            case "AccountCreation":
+                jsonObject = getAccountCreation(requestBody);
+                break;
+            default:
+                // Unknown action
+                JsonObject response = new JsonObject();
+                response.addProperty("action", action);
+                response.addProperty("body", requestBody);
+                response.addProperty("message", "unknown action");
+                jsonObject = response;
+                break;
         }
         return jsonObject;
     }
