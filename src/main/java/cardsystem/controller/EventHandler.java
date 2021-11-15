@@ -14,6 +14,10 @@ public class EventHandler {
         String action = (String) event.getOrDefault("action", "unknown");
         String body = (String) event.getOrDefault("body", "");
         Object responseJson = RequestHandler.handleRequest(action, body);
+        // Sending back event for testing
+        JsonObject json = new JsonObject();
+        json.addProperty("event", String.valueOf(event));
+        responseJson = json;
         return gson.toJson(responseJson);
     }
 
