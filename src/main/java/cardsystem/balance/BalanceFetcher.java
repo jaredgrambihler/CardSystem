@@ -3,6 +3,8 @@ package cardsystem.balance;
 import cardsystem.database.DynamoDBCommunicator;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 
+import java.math.BigDecimal;
+
 import java.util.*;
 
 public class BalanceFetcher {
@@ -17,7 +19,7 @@ public class BalanceFetcher {
                 .withLimit(1)
         );
         if (results.size() == 0) {
-            return Optional.empty();
+            return null;
         } else {
             return Optional.of(loadBalance(balance));
         }
@@ -25,18 +27,22 @@ public class BalanceFetcher {
     
     public Balance loadBalance(cardsystem.database.models.Balance balance) {
         return new Balance(balance.getAccountId(),
-                balance.getBalance()
+            balance.getBalance(),
+            balance.getCreditLimit()
         );
     }
 
-    public Balance getAvailableCredit(cardsystem.database.models.Balance balance) {
-        
+    // available credit (all pending transactions) 
+    public BigDecimal getAvailableCredit(cardsystem.database.models.Balance balance) {
+       return balance.getCreditLimit().subtract(balance.getBalance());   
     }
 
-    public Balance getCreditLimit(cardsystem.database.models.Balance balance) {
-       
+    // creditlimit
+    public BigDecimal getCreditLimit(cardsystem.database.models.Balance balance) {
+       return balance.getCreditLimit();
     }
 }
 
 
-//get balance and creditlimit, available credit (all pending transactions)
+// observer design pattern 
+// load, make  a

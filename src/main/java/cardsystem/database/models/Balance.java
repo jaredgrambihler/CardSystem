@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 public class Balance {
     private String accountId;
     private BigDecimal balance;
+    private BigDecimal creditLimit;
 
     @DynamoDBHashKey(attributeName = "accountId")
     public String getAccountId() {
@@ -28,5 +29,13 @@ public class Balance {
         this.balance = balance;
     }
 
+    @DynamoDBAttribute(attributeName = "creditLimit")
+    public BigDecimal getCreditLimit() {
+        return creditLimit;
+    }
+    
+    public void setCreditLimit(BigDecimal creditLimit) {
+        this.creditLimit = creditLimit;
+    }
 
 }
