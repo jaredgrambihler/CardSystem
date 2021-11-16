@@ -3,11 +3,19 @@ package cardsystem.models;
 import java.util.List;
 
 public class CheckCreditLineResponse {
-
+    private String authToken;
     private double balance;
     private int creditLimit;
     private int availableCredit;
 
+    public String getAuthToken(){
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
+    }
+    
     public double getBalance(){
         return balance;
     }
@@ -28,8 +36,8 @@ public class CheckCreditLineResponse {
         return availableCredit;
     }
 
-    public void getAvailableCredit(List<Integer> creditLines){
-        this.availableCredit = creditLines;
+    public void getAvailableCredit(int availableCredit){
+        this.availableCredit = availableCredit;
     }
 
 }

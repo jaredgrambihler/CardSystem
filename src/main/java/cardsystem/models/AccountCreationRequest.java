@@ -1,10 +1,19 @@
 package cardsystem.models;
 
 public class AccountCreationRequest {
+    private String authToken;
     private String userId;
     private String accountName;
     private int salary;
 
+    public String getAuthToken(){
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
+    }
+    
     public String getUserId(){
         return userId;
     }

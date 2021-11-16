@@ -91,7 +91,6 @@ public class RequestHandler {
     private static CreateStatementResponse getCreateStatement(String requestBody) {
         CreateStatementRequest createStatement = gson.fromJson(requestBody, CreateStatementRequest.class);
         String accountId = createStatement.getAccountId();
-        StatementPeriod statementPeriod = createStatement.getStatementPeriod();
         String authToken = createStatement.getAuthToken();
 
         CreateStatementResponse createStatementResponse = new CreateStatementResponse();
@@ -167,10 +166,10 @@ public class RequestHandler {
                 CashAdvanceTransactionRequest.class);
         String authToken = cashAdvanceTransaction.getAuthToken();
         double amount = cashAdvanceTransaction.getAmount();
+        String accountId = cashAdvanceTransaction.getAccountId();
         String transactionDate = cashAdvanceTransaction.getTransactionDate();
         String postedDate = cashAdvanceTransaction.getPostedDate();
-        Transaction NewCashAdvanceTransaction = new TransactionCreator().createCashAdvanceTransaction(accountId, amount,
-                transactionDate);
+        Transaction NewCashAdvanceTransaction = new TransactionCreator().createCashAdvanceTransaction(accountId, amount, transactionDate)
         CashAdvanceTransactionResponse cashAdvanceTransactionResponse = new CashAdvanceTransactionResponse();
         // To-do
         return cashAdvanceTransactionResponse;
@@ -224,8 +223,7 @@ public class RequestHandler {
         String authToken = merchantTransaction.getAuthToken();
         String transactionDate = merchantTransaction.getTransactionDate();
         String merchant = merchantTransaction.getMerchant();
-        Optional<Transaction> newTransaction = new TransactionCreator().createTransaction(accountId, amount,
-                counterparty, transactionType, transactionDate);
+        Optional<Transaction> newTransaction = new TransactionCreator().createMerchantTransaction(accountId, amount, transactionDate, merchant);
         MerchantTransactionResponse merchantTransactionResponse = new MerchantTransactionResponse();
         if (merchantTransactionResponse.isValidAmount(amount)) {
             merchantTransactionResponse.setIsApproved(true);

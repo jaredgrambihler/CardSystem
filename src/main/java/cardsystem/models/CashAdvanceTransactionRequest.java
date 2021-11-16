@@ -5,6 +5,7 @@ public class CashAdvanceTransactionRequest {
      private double amount;
      private String transactionDate;
      private String postedDate;
+     private String accountId;
 
 
      public String getAuthToken(){
@@ -37,5 +38,13 @@ public class CashAdvanceTransactionRequest {
 
     public void setPostedDate(String postedDate) {
         this.postedDate = postedDate;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }
