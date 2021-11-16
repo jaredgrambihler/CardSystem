@@ -8,6 +8,8 @@ import cardsystem.auth.TokenFactory;
 import cardsystem.creditbureau.CreditReport;
 import cardsystem.creditbureau.CreditReportFetcher;
 import cardsystem.models.*;
+import cardsystem.rewards.RewardFetcher;
+import cardsystem.rewards.RewardRedeemer;
 import cardsystem.statement.CreditCardStatementFetcher;
 import cardsystem.statement.Statement;
 import cardsystem.transaction.Transaction;
@@ -68,6 +70,9 @@ public class RequestHandler {
                 break;
             case "AccountCreation":
                 jsonObject = getAccountCreation(requestBody);
+                break;
+            case "RedeemRewards":
+            	jsonObject = getRedeemRewards(requestBody);
                 break;
             default:
                 // Unknown action
@@ -252,4 +257,20 @@ public class RequestHandler {
         return userApplicationResponse;
     }
 
+    private static RedeemRewardsResponse getRedeemRewards(String requestBody) {
+		RedeemRewardsRequest redeemRewardsRequest = gson.fromJson(requestBody, RedeemRewardsRequest.class);
+		String accountId = redeemRewardsRequest.getAccountId();
+		int amount = redeemRewardsRequest.getAmount();
+		
+		RedeemRewardsResponse redeemRewardsResponse = new RedeemRewardsResponse();
+		int previousRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+		new RewardRedeemer().redeemPoints(amount, accountId);
+		int updatedRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+		if (updatedRewards == previousRewards - amount) {
+			redeemRewardsResponse.setRedeemed(true);
+		} else {
+			redeemRewardsResponse.setRedeemed(false);
+		}
+		return redeemRewardsResponse;
+	}
 }
