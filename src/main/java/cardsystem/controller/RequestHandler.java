@@ -3,11 +3,16 @@ package cardsystem.controller;
 import cardsystem.account.AccountCreator;
 import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
+import cardsystem.auth.Token;
+import cardsystem.auth.TokenFactory;
 import cardsystem.creditbureau.CreditReport;
 import cardsystem.creditbureau.CreditReportFetcher;
 import cardsystem.models.*;
 import cardsystem.statement.CreditCardStatementFetcher;
 import cardsystem.statement.Statement;
+import cardsystem.transaction.Transaction;
+import cardsystem.transaction.TransactionCreator;
+import cardsystem.transaction.TransactionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -23,13 +28,13 @@ public class RequestHandler {
         Object jsonObject = new JsonObject();
         switch (action) {
             case "BalancePayment":
-                jsonObject = getBalancePayment(requestBody);
+                jsonObject = makeTransaction(requestBody, TransactionType.PAYMENT);
                 break;
             case "MerchantTransaction":
-                jsonObject = getMerchantTransaction(requestBody);
+                jsonObject = makeTransaction(requestBody, TransactionType.MERCHANT);
                 break;
             case "CashAdvanceTransaction":
-                jsonObject = getCashAdvanceTransaction(requestBody);
+                jsonObject = makeTransaction(requestBody, TransactionType.CASH_ADVANCE);
                 break;
             case "CheckBalance":
                 jsonObject = getBalanceCheck(requestBody);
@@ -74,6 +79,35 @@ public class RequestHandler {
                 break;
         }
         return jsonObject;
+    }
+
+    private static TransactionResponse makeTransaction(String requestBody, TransactionType transactionType) {
+        TransactionRequest transactionRequest = gson.fromJson(requestBody, TransactionRequest.class);
+        Token token = TokenFactory.createToken(transactionRequest.getAuthToken());
+        String accountId = transactionRequest.getAccountId();
+        String counterparty = transactionRequest.getCounterparty();
+        TransactionResponse transactionResponse = new TransactionResponse();
+        transactionResponse.setApproved(false);
+
+        // check arguments are valid for creating a transaction, else return
+        if (accountId == null || counterparty == null) {
+            return transactionResponse;
+        }
+
+        if (token.getAccountIds().contains(accountId)) {
+            Optional<Transaction> transaction = new TransactionCreator().createTransaction(
+                    accountId,
+                    transactionRequest.getAmount(),
+                    counterparty,
+                    transactionType,
+                    LocalDateTime.now()
+            );
+            // check transaction was created successfully
+            if (transaction.isPresent()) {
+                transactionResponse.setApproved(true);
+            }
+        }
+        return transactionResponse;
     }
 
     private static AccountCreationResponse getAccountCreation(String requestBody) {
@@ -187,20 +221,6 @@ public class RequestHandler {
         return balanceCheckResponse;
     }
 
-    private static CashAdvanceTransactionResponse getCashAdvanceTransaction(String requestBody) {
-        CashAdvanceTransactionRequest cashAdvanceTransaction = gson.fromJson(requestBody,
-                CashAdvanceTransactionRequest.class);
-        String authToken = cashAdvanceTransaction.getAuthToken();
-        double amount = cashAdvanceTransaction.getAmount();
-        String accountId = cashAdvanceTransaction.getAccountId();
-        String transactionDate = cashAdvanceTransaction.getTransactionDate();
-        String postedDate = cashAdvanceTransaction.getPostedDate();
-        // Transaction NewCashAdvanceTransaction = new TransactionCreator().createCashAdvanceTransaction(accountId, amount, transactionDate)
-        CashAdvanceTransactionResponse cashAdvanceTransactionResponse = new CashAdvanceTransactionResponse();
-        // To-do
-        return cashAdvanceTransactionResponse;
-    }
-
     private static AccountLoginResponse getAccountLogin(String requestBody) {
         AccountLoginRequest accountLogin = gson.fromJson(requestBody, AccountLoginRequest.class);
         String emailAddress = accountLogin.getEmailAddress();
@@ -232,30 +252,4 @@ public class RequestHandler {
         return userApplicationResponse;
     }
 
-    private static BalancePayment getBalancePayment(String requestBody) {
-        BalancePayment balancePayment = gson.fromJson(requestBody, BalancePayment.class);
-        double balance = balancePayment.getBalance();
-        String authToken = balancePayment.getAuthToken();
-
-        BalancePayment balancePaymentResponse = new BalancePayment();
-
-        return balancePaymentResponse;
-    }
-
-    private static MerchantTransactionResponse getMerchantTransaction(String requestBody) {
-        MerchantTransactionRequest merchantTransaction = gson.fromJson(requestBody, MerchantTransactionRequest.class);
-        double amount = merchantTransaction.getAmount();
-        String accountId = merchantTransaction.getAccountId();
-        String authToken = merchantTransaction.getAuthToken();
-        String transactionDate = merchantTransaction.getTransactionDate();
-        String merchant = merchantTransaction.getMerchant();
-        // Optional<Transaction> newTransaction = new TransactionCreator().createMerchantTransaction(accountId, amount, transactionDate, merchant);
-        MerchantTransactionResponse merchantTransactionResponse = new MerchantTransactionResponse();
-//        if (merchantTransactionResponse.isValidAmount(amount)) {
-//            merchantTransactionResponse.setIsApproved(true);
-//        } else {
-//            merchantTransactionResponse.setIsApproved(false);
-//        }
-        return merchantTransactionResponse;
-    }
 }
