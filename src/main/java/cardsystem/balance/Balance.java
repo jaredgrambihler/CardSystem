@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 public class Balance {
     private String accountId;
     private BigDecimal balance;
-    private BigDecimal creditLimit;
+    private BigDecimal availableCredit;
 
-    public Balance(String accountId, BigDecimal balance, BigDecimal creditLimit) {
+    public Balance(String accountId, BigDecimal balance, BigDecimal availableCredit) {
         this.accountId = accountId;
         this.balance = balance;
-        this.creditLimit = creditLimit;
+        this.availableCredit = availableCredit;
     }
 
     public String getAccountId() {
@@ -23,15 +23,15 @@ public class Balance {
         return balance;
     }
 
-    public BigDecimal getCreditLimit() {
-        return creditLimit;
+    public BigDecimal getAvailableCredit() {
+        return availableCredit;
     }
 
     public void saveToDatabase() {
         cardsystem.database.models.Balance balance = new cardsystem.database.models.Balance();
         balance.setAccountId(accountId);
         balance.setBalance(getBalance());
-        balance.setCreditLimit(getCreditLimit());
+        balance.setAvailableCredit(getAvailableCredit());
         new DynamoDBCommunicator().save(balance);
     }
 }
