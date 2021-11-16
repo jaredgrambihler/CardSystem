@@ -60,7 +60,7 @@ public class RequestHandler {
                 jsonObject = getAccountLogin(requestBody);
                 break;
             case "AccountClosure":
-                jsonObject = getAccountClosure(requestBody);
+                jsonObject = closeAccount(requestBody);
                 break;
             case "CreateStatement":
                 jsonObject = getCreateStatement(requestBody);
@@ -165,14 +165,16 @@ public class RequestHandler {
         return checkCreditLineResponse;
     }
 
-    private static AccountClosureResponse getAccountClosure(String requestBody) {
+    private static AccountClosureResponse closeAccount(String requestBody) {
         AccountClosureRequest accountClosure = gson.fromJson(requestBody, AccountClosureRequest.class);
         String authToken = accountClosure.getAuthToken();
-        String emailAddress = accountClosure.getEmailAddress();
         String accountId = accountClosure.getAccountId();
-
+        boolean closed = false;
+        if (TokenFactory.createToken(authToken).getAccountIds().contains(accountId)) {
+            closed = new AccountCreator().closeAccount(accountId);
+        }
         AccountClosureResponse accountClosureResponse = new AccountClosureResponse();
-
+        accountClosureResponse.setClosed(closed);
         return accountClosureResponse;
     }
 

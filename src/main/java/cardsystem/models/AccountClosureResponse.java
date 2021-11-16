@@ -1,13 +1,13 @@
 package cardsystem.models;
 
 public class AccountClosureResponse {
-    private String accountId;
+    private boolean closed;
 
-    public String getAccountId(){
-        return accountId;
+    public boolean getClosed(){
+        return closed;
     }
 
-    public void setAccountId(String accountId){
-        this.accountId = accountId;
+    public void setClosed(boolean closed){
+        this.closed = closed;
     }
 }
