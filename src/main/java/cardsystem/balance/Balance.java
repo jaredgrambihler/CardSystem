@@ -27,6 +27,14 @@ public class Balance {
         return availableCredit;
     }
 
+    public void updateAvailableCredit(BigDecimal availableCredit) {
+        this.availableCredit = availableCredit;
+    }
+
+    public void updateBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     public void saveToDatabase() {
         cardsystem.database.models.Balance balance = new cardsystem.database.models.Balance();
         balance.setAccountId(accountId);

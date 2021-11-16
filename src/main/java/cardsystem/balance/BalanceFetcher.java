@@ -6,7 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import java.util.*;
 
 public class BalanceFetcher {
-    public Optional<Balance> getLatestBalance(String accountId) {
+    public static Balance getLatestBalance(String accountId) {
         cardsystem.database.models.Balance balance = new cardsystem.database.models.Balance();
         balance.setAccountId(accountId);
         List<cardsystem.database.models.Balance> results = new DynamoDBCommunicator().query(
@@ -19,13 +19,14 @@ public class BalanceFetcher {
         if (results.size() == 0) {
             return null;
         } else {
-            return Optional.of(loadBalance(balance));
+            return loadBalance(balance);
         }
     }
     
-    public Balance loadBalance(cardsystem.database.models.Balance balance) {
+    public static Balance loadBalance(cardsystem.database.models.Balance balance) {
         return new Balance(balance.getAccountId(),
-            balance.getBalance()
+            balance.getBalance(),
+            balance.getAvailableCredit()
         );
     }
 
