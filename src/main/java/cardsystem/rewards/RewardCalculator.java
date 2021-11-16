@@ -5,26 +5,48 @@ import java.util.Optional;
 
 import cardsystem.database.DynamoDBCommunicator;
 import cardsystem.transaction.Transaction;
+import cardsystem.transaction.TransactionType;
 
 public class RewardCalculator {
-	private int rewardPoints;
-	private String accountId;
-	
 	
 	// Calculate and return reward points from list of transactions
 	// If the account doesn't have any previous reward points, a new db reward object is created
-	public int calculateRewardPoints(List<Transaction> transactions, String accountId) {
-		int rewardPoints = 0;
-		for (Transaction t: transactions) {
-			rewardPoints += (int) Math.round(t.getAmount() * 2);
-		}
+	public int createRewardPoints(List<Transaction> transactions, String accountId) {
+		int rewardPoints = calculateRewardPoints(transactions);
 		int previousRewardPoints = RewardFetcher.getCurrentRewardPoints(accountId);
 		if (previousRewardPoints >= 0) {
 			updateRewardPointsInDatabase(accountId, (rewardPoints + previousRewardPoints));
 		} else {
-			this.rewardPoints = rewardPoints;
-			this.accountId = accountId;
-			saveToDatabase();
+			saveToDatabase(rewardPoints, accountId);
+		}
+		return rewardPoints;
+	}
+	
+	public int calculateRewardPoints(List<Transaction> transactions) {
+		int rewardPoints = 0;
+		for (Transaction t: transactions) {
+			if (t.getTransactionType() == TransactionType.MERCHANT) {
+				String merchant = t.getCounterparty();
+				MerchantCategory category = MerchantCategory.getCategory(merchant);
+				double rewardMultiplier;
+				switch(category) {
+					case RESTAURANT:
+						rewardMultiplier = 3;
+						break;
+					case CLOTHING_STORE:
+						rewardMultiplier = 2.5;
+						break;
+					case GROCERY_STORE:
+						rewardMultiplier = 2;
+						break;
+					case AIRLINE:
+						rewardMultiplier = 4;
+						break;
+					default:
+						rewardMultiplier = 1.5;
+				}
+				rewardPoints += (int) Math.round(t.getAmount() * rewardMultiplier);
+			}
 		}
 		return rewardPoints;
 	}
@@ -38,15 +60,15 @@ public class RewardCalculator {
 		}
 	}
 	
-	public void saveToDatabase() {
-		new DynamoDBCommunicator().save(createDatabaseModel());
+	public void saveToDatabase(int rewardPoints, String accountId) {
+		new DynamoDBCommunicator().save(createDatabaseModel(rewardPoints, accountId));
 	}
 
     /**
      * Create the database model.
      * @return database model object with fields populated
      */
-    protected cardsystem.database.models.Reward createDatabaseModel() {
+    protected cardsystem.database.models.Reward createDatabaseModel(int rewardPoints, String accountId) {
         cardsystem.database.models.Reward reward = new cardsystem.database.models.Reward();
         reward.setRewardPoints(rewardPoints);
         reward.setAccountId(accountId);

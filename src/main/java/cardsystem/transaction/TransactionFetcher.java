@@ -53,56 +53,13 @@ public class TransactionFetcher {
 
     private static Transaction loadTransactionFromDatabaseModel(cardsystem.database.models.Transaction transaction) {
         TransactionType transactionType = TransactionType.valueOf(transaction.getTransactionType());
-        Transaction loadedTransaction;
-        switch (transactionType) {
-            case CASH_ADVANCE:
-                loadedTransaction = loadCashAdvance(transaction);
-                break;
-            case MERCHANT:
-                loadedTransaction = loadMerchantTransaction(transaction);
-                break;
-            case PAYMENT:
-                loadedTransaction = loadPayment(transaction);
-                break;
-            case REFUND:
-                loadedTransaction = loadRefund(transaction);
-                break;
-            default:
-                return null;
-        }
-        return loadedTransaction;
-    }
-
-    public static CashAdvance loadCashAdvance(cardsystem.database.models.Transaction transaction) {
-        return new CashAdvance(transaction.getTransactionId(), transaction.getAccountId(),
+        return new TransactionImpl(transaction.getTransactionId(),
+                transaction.getAccountId(),
                 transaction.getAmount().doubleValue(),
-                DateConverter.getLocalDateTime(transaction.getTransactionDate()),
-                getPostedDate(transaction)
-        );
-    }
-
-    public static MerchantTransaction loadMerchantTransaction(cardsystem.database.models.Transaction transaction) {
-        return new MerchantTransaction(transaction.getTransactionId(), transaction.getAccountId(),
-                transaction.getAmount().doubleValue(),
+                transaction.getCounterparty(),
                 DateConverter.getLocalDateTime(transaction.getTransactionDate()),
                 getPostedDate(transaction),
-                transaction.getMerchant()
-        );
-    }
-
-    public static Payment loadPayment(cardsystem.database.models.Transaction transaction) {
-        return new Payment(transaction.getTransactionId(), transaction.getAccountId(),
-                transaction.getAmount().doubleValue(),
-                DateConverter.getLocalDateTime(transaction.getTransactionDate()),
-                getPostedDate(transaction)
-        );
-    }
-
-    public static Refund loadRefund(cardsystem.database.models.Transaction transaction) {
-        return new Refund(transaction.getTransactionId(), transaction.getAccountId(),
-                transaction.getAmount().doubleValue(),
-                DateConverter.getLocalDateTime(transaction.getTransactionDate()),
-                getPostedDate(transaction)
+                transactionType
         );
     }
 
