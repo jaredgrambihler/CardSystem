@@ -7,5 +7,6 @@ public interface Account {
 	public String getAccountId();
 	public String getAccountNumber();
 	public String getUserId();
+	public void setCreditLimit(int creditLimit);
 	
 }

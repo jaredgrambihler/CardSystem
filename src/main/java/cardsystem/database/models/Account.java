@@ -10,6 +10,7 @@ public class Account {
   private String accountId;
   private String accountNumber;
   private String userId;
+  private int creditLimit;
   
   @DynamoDBHashKey(attributeName = "accountId")
   @DynamoDBAttribute
@@ -42,5 +43,13 @@ public class Account {
   }
   public void setUserId(String userId) {
     this.userId = userId;
+  } 
+  
+  @DynamoDBAttribute(attributeName = "creditLimit")
+  public int getCreditLimit() {
+    return creditLimit;
+  }
+  public void setCreditLimit(int creditLimit) {
+    this.creditLimit = creditLimit;
   } 
 }

@@ -2,7 +2,7 @@ package cardsystem.models;
 
 public class CheckCreditLineRequest {
     private String authToken;
-    private int creditLines;
+    private String ssn;
 
     public String getAuthToken(){
         return authToken;
@@ -12,11 +12,11 @@ public class CheckCreditLineRequest {
         this.authToken = authToken;
     }
 
-    public int getCreditLines(){
-        return creditLines;
+    public String getSsn(){
+        return ssn;
     }
 
-    public void setCreditLines(int creditLines){
-        this.creditLines = creditLines;
+    public void setSsn(String ssn){
+        this.ssn = ssn;
     }
 }
