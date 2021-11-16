@@ -7,6 +7,7 @@ import cardsystem.auth.Token;
 import cardsystem.auth.TokenFactory;
 import cardsystem.creditbureau.CreditReport;
 import cardsystem.creditbureau.CreditReportFetcher;
+import cardsystem.database.DateConverter;
 import cardsystem.models.*;
 import cardsystem.rewards.RewardFetcher;
 import cardsystem.rewards.RewardRedeemer;
@@ -14,12 +15,14 @@ import cardsystem.statement.CreditCardStatementFetcher;
 import cardsystem.statement.Statement;
 import cardsystem.transaction.Transaction;
 import cardsystem.transaction.TransactionCreator;
+import cardsystem.transaction.TransactionFetcher;
 import cardsystem.transaction.TransactionType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 public class RequestHandler {
@@ -48,7 +51,7 @@ public class RequestHandler {
                 jsonObject = getCreditLimitCheck(requestBody);
                 break;
             case "ListTransactions":
-                jsonObject = getListTransactions(requestBody);
+                jsonObject = getTransactions(requestBody);
                 break;
             case "FetchStatementPeriod":
                 jsonObject = getFetchStatementPeriod(requestBody);
@@ -206,14 +209,19 @@ public class RequestHandler {
         return creditLimitCheck;
     }
 
-    private static ListTransactionsResponse getListTransactions(String requestBody) {
+    private static ListTransactionsResponse getTransactions(String requestBody) {
         ListTransactionsRequest listTransactions = gson.fromJson(requestBody, ListTransactionsRequest.class);
-        String authToken = listTransactions.getAuthToken();
-        LocalDateTime startTime = listTransactions.getStartTime();
-        LocalDateTime endTime = listTransactions.getEndTime();
-        // Transaction newListTransaction = new TransactionFetcher().loadPostedTransactions(authToken, startTime, endTime);
+        Token token = TokenFactory.createToken(listTransactions.getAuthToken());
+        String accountId = listTransactions.getAccountId();
+
         ListTransactionsResponse listTransactionsResponse = new ListTransactionsResponse();
-        // listTransactionsResponse.setTransactions(transactions);
+        if (!token.getAccountIds().contains(accountId)) {
+            return listTransactionsResponse;
+        }
+        LocalDateTime startTime = DateConverter.getLocalDateTime(listTransactions.getStartTime());
+        LocalDateTime endTime = DateConverter.getLocalDateTime(listTransactions.getEndTime());
+        List<Transaction> transactions = new TransactionFetcher().loadPostedTransactions(accountId, startTime, endTime);
+        listTransactionsResponse.setTransactions(transactions);
         return listTransactionsResponse;
     }
 
