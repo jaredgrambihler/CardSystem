@@ -1,24 +1,37 @@
 package cardsystem.models;
 
-import java.time.LocalDateTime;
+import java.util.List;
+
+import cardsystem.transaction.Transaction;
 
 public class FetchStatementResponse {
     private String accountId;
-    private LocalDateTime localDateTime;
+    private double balance;
+    private List<Transaction> transactions;
 
-    public String getAccountId(){
+    public List<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public String getAccountId(){
         return accountId;
     }
 
     public void setAccountId(String accountId){
         this.accountId = accountId;
     }
-
-    public LocalDateTime getLocalDateTime(){
-        return localDateTime;
-    }
-
-    public void setLocalDateTime(LocalDateTime localDateTime){
-        this.localDateTime = localDateTime;
-    }
+    
+    
 }
