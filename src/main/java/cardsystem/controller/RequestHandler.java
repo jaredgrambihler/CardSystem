@@ -3,19 +3,16 @@ package cardsystem.controller;
 import cardsystem.account.AccountCreator;
 import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
-import cardsystem.approval.CreditLimit;
-import cardsystem.creditbureau.Experian;
-import cardsystem.creditbureau.ExperianCreditReport;
-import cardsystem.email.Email;
+import cardsystem.creditbureau.CreditReport;
+import cardsystem.creditbureau.CreditReportFetcher;
 import cardsystem.models.*;
-import cardsystem.user.User;
-import cardsystem.user.UserFetcher;
-
+import cardsystem.statement.CreditCardStatementFetcher;
+import cardsystem.statement.Statement;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import javax.print.attribute.standard.JobStateReasons;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class RequestHandler {
@@ -29,7 +26,7 @@ public class RequestHandler {
                 jsonObject = getBalancePayment(requestBody);
                 break;
             case "MerchantTransaction":
-                jsonObject = getMakeTransaction(requestBody);
+                jsonObject = getMerchantTransaction(requestBody);
                 break;
             case "CashAdvanceTransaction":
                 jsonObject = getCashAdvanceTransaction(requestBody);
@@ -53,16 +50,16 @@ public class RequestHandler {
                 jsonObject = getEmailNotifications(requestBody);
                 break;
             case "AccountLogin":
-                jsonObject = getAccountLoginResponse(requestBody);
+                jsonObject = getAccountLogin(requestBody);
                 break;
             case "AccountClosure":
                 jsonObject = getAccountClosure(requestBody);
                 break;
             case "CreateStatement":
-                jsonObject = getMakeStatement(requestBody);
+                jsonObject = getCreateStatement(requestBody);
                 break;
             case "AccountApply":
-                jsonObject = getAccountApply(requestBody);
+                jsonObject = getUserApplication(requestBody);
                 break;
             case "AccountCreation":
                 jsonObject = getAccountCreation(requestBody);
@@ -79,8 +76,8 @@ public class RequestHandler {
         return jsonObject;
     }
 
-    private static AccountCreationResponse getAccountCreation(String requestBody){
-        AccountCreation accountCreation = gson.fromJson(requestBody, AccountCreation.class);
+    private static AccountCreationResponse getAccountCreation(String requestBody) {
+        AccountCreationRequest accountCreation = gson.fromJson(requestBody, AccountCreationRequest.class);
         String userId = accountCreation.getUserId();
         String accountName = accountCreation.getAccountName();
         if (accountName == null || accountName.isEmpty()) {
@@ -99,43 +96,55 @@ public class RequestHandler {
         return accountCreationResponse;
     }
 
-    private static MakeStatement getMakeStatement(String requestBody) {
-        MakeStatement makeStatement = gson.fromJson(requestBody, MakeStatement.class);
-        String accountId = makeStatement.getAccountId();
-        String statementPeriodStart = makeStatement.getStatementPeriodStart();
-        String statementPeriodEnd = makeStatement.getStatementPeriodEnd();
-        double amount = makeStatement.getAmount();
-        double balance = makeStatement.getBalance();
-        String transactionId = makeStatement.getTransactionId();
-        return makeStatement;
+    private static CreateStatementResponse getCreateStatement(String requestBody) {
+        CreateStatementRequest createStatement = gson.fromJson(requestBody, CreateStatementRequest.class);
+        String accountId = createStatement.getAccountId();
+        String authToken = createStatement.getAuthToken();
+
+        CreateStatementResponse createStatementResponse = new CreateStatementResponse();
+
+        return createStatementResponse;
     }
 
-    private static EmailNotifications getEmailNotifications(String requestBody) {
-        EmailNotifications emailNotifications = gson.fromJson(requestBody, EmailNotifications.class);
-        String emailAddress = emailNotifications.getEmailAddress();
+    private static EmailNotificationsResponse getEmailNotifications(String requestBody) {
+        EmailNotificationsRequest emailNotifications = gson.fromJson(requestBody, EmailNotificationsRequest.class);
         String accountId = emailNotifications.getAccountId();
-        return emailNotifications;
+        String emailAddress = emailNotifications.getEmailAddress();
+
+        EmailNotificationsResponse emailNotificationsResponse = new EmailNotificationsResponse();
+
+        return emailNotificationsResponse;
     }
 
-    private static FetchStatementPeriod getFetchStatementPeriod(String requestBody) {
-        FetchStatementPeriod fetchStatementPeriod = gson.fromJson(requestBody, FetchStatementPeriod.class);
-        String startDate = fetchStatementPeriod.getStartDate();
-        String endDate = fetchStatementPeriod.getEndDate();
-        return fetchStatementPeriod;
+    private static FetchStatementResponse getFetchStatementPeriod(String requestBody) {
+        FetchStatementRequest fetchStatement = gson.fromJson(requestBody, FetchStatementRequest.class);
+        String accountId = fetchStatement.getAccountId();
+        Optional<Statement> latestStatement = new CreditCardStatementFetcher().getLatestStatement(accountId);
+        FetchStatementResponse fetchStatementResponse = new FetchStatementResponse();
+        if (latestStatement.isPresent()) {
+            fetchStatementResponse.setAccountId(latestStatement.get().getAccountId());
+        }
+        return fetchStatementResponse;
     }
 
-    private static CheckCreditLine getCheckCreditLine(String requestBody) {
-        CheckCreditLine checkCreditLine = gson.fromJson(requestBody, CheckCreditLine.class);
-        String accountId = checkCreditLine.getAccountId();
-        int creditLines = checkCreditLine.getCreditLines();
-        return checkCreditLine;
+    private static CheckCreditLineResponse getCheckCreditLine(String requestBody) {
+        CheckCreditLineRequest checkCreditLine = gson.fromJson(requestBody, CheckCreditLineRequest.class);
+        String ssn = checkCreditLine.getSsn();
+        Optional<CreditReport> creditReport = new CreditReportFetcher().loadCreditReport(ssn);
+        CheckCreditLineResponse checkCreditLineResponse = new CheckCreditLineResponse();
+        checkCreditLineResponse.getAvailableCredit();
+        return checkCreditLineResponse;
     }
 
-    private static AccountClosure getAccountClosure(String requestBody) {
-        AccountClosure accountClosure = gson.fromJson(requestBody, AccountClosure.class);
-        String accountId = accountClosure.getAccountId();
+    private static AccountClosureResponse getAccountClosure(String requestBody) {
+        AccountClosureRequest accountClosure = gson.fromJson(requestBody, AccountClosureRequest.class);
+        String authToken = accountClosure.getAuthToken();
         String emailAddress = accountClosure.getEmailAddress();
-        return accountClosure;
+        String accountId = accountClosure.getAccountId();
+
+        AccountClosureResponse accountClosureResponse = new AccountClosureResponse();
+
+        return accountClosureResponse;
     }
 
     // What is this method looking for? CreditLimitCheck is not containing credit limit
@@ -158,34 +167,43 @@ public class RequestHandler {
         return creditLimitCheck;
     }
 
-    private static ListTransactions getListTransactions(String requestBody) {
-        ListTransactions listTransactions = gson.fromJson(requestBody, ListTransactions.class);
-        String accountId = listTransactions.getAccountId();
-        double amount = listTransactions.getAmount();
-        String transactionDate = listTransactions.getTransactionDate();
-        String transactionId = listTransactions.getTransactionId();
-        return listTransactions;
+    private static ListTransactionsResponse getListTransactions(String requestBody) {
+        ListTransactionsRequest listTransactions = gson.fromJson(requestBody, ListTransactionsRequest.class);
+        String authToken = listTransactions.getAuthToken();
+        LocalDateTime startTime = listTransactions.getStartTime();
+        LocalDateTime endTime = listTransactions.getEndTime();
+        // Transaction newListTransaction = new TransactionFetcher().loadPostedTransactions(authToken, startTime, endTime);
+        ListTransactionsResponse listTransactionsResponse = new ListTransactionsResponse();
+        // listTransactionsResponse.setTransactions(transactions);
+        return listTransactionsResponse;
     }
 
-    private static BalanceCheck getBalanceCheck(String requestBody) {
-        BalanceCheck balanceCheck = gson.fromJson(requestBody, BalanceCheck.class);
-        String accountId = balanceCheck.getAccountId();
+    private static BalanceCheckResponse getBalanceCheck(String requestBody) {
+        BalanceCheckRequest balanceCheck = gson.fromJson(requestBody, BalanceCheckRequest.class);
+        String authToken = balanceCheck.getAuthToken();
         double balance = balanceCheck.getBalance();
-        return balanceCheck;
+        BalanceCheckResponse balanceCheckResponse = new BalanceCheckResponse();
+        // To-do
+        return balanceCheckResponse;
     }
 
-    private static CashAdvanceTransaction getCashAdvanceTransaction(String requestBody) {
-        CashAdvanceTransaction cashAdvanceTransaction = gson.fromJson(requestBody, CashAdvanceTransaction.class);
-        String accountId = cashAdvanceTransaction.getAccountId();
+    private static CashAdvanceTransactionResponse getCashAdvanceTransaction(String requestBody) {
+        CashAdvanceTransactionRequest cashAdvanceTransaction = gson.fromJson(requestBody,
+                CashAdvanceTransactionRequest.class);
+        String authToken = cashAdvanceTransaction.getAuthToken();
         double amount = cashAdvanceTransaction.getAmount();
+        String accountId = cashAdvanceTransaction.getAccountId();
         String transactionDate = cashAdvanceTransaction.getTransactionDate();
         String postedDate = cashAdvanceTransaction.getPostedDate();
-        return cashAdvanceTransaction;
+        // Transaction NewCashAdvanceTransaction = new TransactionCreator().createCashAdvanceTransaction(accountId, amount, transactionDate)
+        CashAdvanceTransactionResponse cashAdvanceTransactionResponse = new CashAdvanceTransactionResponse();
+        // To-do
+        return cashAdvanceTransactionResponse;
     }
 
-    private static AccountLoginResponse getAccountLoginResponse(String requestBody) {
-        AccountLogin accountLogin = gson.fromJson(requestBody, AccountLogin.class);
-        String emailAddress = accountLogin.getEmailAdress();
+    private static AccountLoginResponse getAccountLogin(String requestBody) {
+        AccountLoginRequest accountLogin = gson.fromJson(requestBody, AccountLoginRequest.class);
+        String emailAddress = accountLogin.getEmailAddress();
         String password = accountLogin.getPassword();
         String authToken = "";
         if (emailAddress != null && password != null) {
@@ -197,31 +215,47 @@ public class RequestHandler {
         return accountLoginResponse;
     }
 
-    private static AccountApplyResponse getAccountApply(String requestBody) {
-        AccountApply accountApply = gson.fromJson(requestBody, AccountApply.class);
-        int age = accountApply.getAge();
-        String ssn = accountApply.getSsn();
-        String validEmail = accountApply.getValidEmail();
-        AccountApplyResponse accountReplyResponse = new AccountApplyResponse();
-        return accountReplyResponse;
+    private static UserApplicationResponse getUserApplication(String requestBody) {
+        UserApplicationRequest userApplication = gson.fromJson(requestBody, UserApplicationRequest.class);
+        int age = userApplication.getAge();
+        String ssn = userApplication.getSsn();
+        String validEmail = userApplication.getValidEmail();
+        // UserApprover userApprover = new UserApprover().isApproved(age, ssn, validEmail);
+        UserApplicationResponse userApplicationResponse = new UserApplicationResponse();
+        if (userApplicationResponse.getIsValid()) {
+            userApplicationResponse.setIsValid(true);
+            System.out.println("You are approved!");
+        } else {
+            userApplicationResponse.setIsValid(false);
+            System.out.println("You are not approved!");
+        }
+        return userApplicationResponse;
     }
 
     private static BalancePayment getBalancePayment(String requestBody) {
         BalancePayment balancePayment = gson.fromJson(requestBody, BalancePayment.class);
-        // id declaration?
-        double amount = balancePayment.getAmount();
-        String accountId = balancePayment.getAccountId();
-        String transactionDate = balancePayment.getTransactionDate();
-        String postedDate = balancePayment.getPostedDate();
-        return balancePayment;
+        double balance = balancePayment.getBalance();
+        String authToken = balancePayment.getAuthToken();
+
+        BalancePayment balancePaymentResponse = new BalancePayment();
+
+        return balancePaymentResponse;
     }
 
-    private static MakeTransaction getMakeTransaction(String requestBody) {
-        MakeTransaction makeTransaction = gson.fromJson(requestBody, MakeTransaction.class);
-        double amount = makeTransaction.getAmount();
-        String accountId = makeTransaction.getAccountId();
-        String transactionDate = makeTransaction.getTransactionDate();
-        String merchant = makeTransaction.getMerchant();
-        return makeTransaction;
+    private static MerchantTransactionResponse getMerchantTransaction(String requestBody) {
+        MerchantTransactionRequest merchantTransaction = gson.fromJson(requestBody, MerchantTransactionRequest.class);
+        double amount = merchantTransaction.getAmount();
+        String accountId = merchantTransaction.getAccountId();
+        String authToken = merchantTransaction.getAuthToken();
+        String transactionDate = merchantTransaction.getTransactionDate();
+        String merchant = merchantTransaction.getMerchant();
+        // Optional<Transaction> newTransaction = new TransactionCreator().createMerchantTransaction(accountId, amount, transactionDate, merchant);
+        MerchantTransactionResponse merchantTransactionResponse = new MerchantTransactionResponse();
+//        if (merchantTransactionResponse.isValidAmount(amount)) {
+//            merchantTransactionResponse.setIsApproved(true);
+//        } else {
+//            merchantTransactionResponse.setIsApproved(false);
+//        }
+        return merchantTransactionResponse;
     }
 }

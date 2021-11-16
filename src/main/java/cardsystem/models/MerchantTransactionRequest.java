@@ -1,10 +1,19 @@
 package cardsystem.models;
 
-public class MakeTransaction {
+public class MerchantTransactionRequest {
+    private String authToken;
     private String accountId;
     private double amount;
     private String transactionDate;
     private String merchant;
+
+    public String getAuthToken(){
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
+    }
 
     public String getAccountId(){
         return accountId;

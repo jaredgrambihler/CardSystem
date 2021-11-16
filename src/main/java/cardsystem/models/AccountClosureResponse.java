@@ -1,8 +1,7 @@
 package cardsystem.models;
 
-public class BalanceCheck {
+public class AccountClosureResponse {
     private String accountId;
-    private double balance;
 
     public String getAccountId(){
         return accountId;
@@ -11,13 +10,4 @@ public class BalanceCheck {
     public void setAccountId(String accountId){
         this.accountId = accountId;
     }
-
-    public double getBalance(){
-        return balance;
-    }
-
-    public void setBalance(double balance){
-        this.balance = balance;
-    }
-
 }
