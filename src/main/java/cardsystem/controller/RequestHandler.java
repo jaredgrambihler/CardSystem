@@ -56,9 +56,6 @@ public class RequestHandler {
             case "FetchStatementPeriod":
                 jsonObject = getFetchStatementPeriod(requestBody);
                 break;
-            case "EmailNotifications":
-                jsonObject = getEmailNotifications(requestBody);
-                break;
             case "AccountLogin":
                 jsonObject = getAccountLogin(requestBody);
                 break;
@@ -146,16 +143,6 @@ public class RequestHandler {
         CreateStatementResponse createStatementResponse = new CreateStatementResponse();
 
         return createStatementResponse;
-    }
-
-    private static EmailNotificationsResponse getEmailNotifications(String requestBody) {
-        EmailNotificationsRequest emailNotifications = gson.fromJson(requestBody, EmailNotificationsRequest.class);
-        String accountId = emailNotifications.getAccountId();
-        String emailAddress = emailNotifications.getEmailAddress();
-
-        EmailNotificationsResponse emailNotificationsResponse = new EmailNotificationsResponse();
-
-        return emailNotificationsResponse;
     }
 
     private static FetchStatementResponse getFetchStatementPeriod(String requestBody) {
