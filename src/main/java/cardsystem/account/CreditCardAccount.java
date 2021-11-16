@@ -48,7 +48,6 @@ public class CreditCardAccount implements Account {
 		return userId;
 	}
 	
-	@Override
 	public int getCreditLimit() {
 		return this.creditLimit;
 	}
