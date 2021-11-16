@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import cardsystem.database.DynamoDBCommunicator;
-import cardsystem.transaction.MerchantTransaction;
 import cardsystem.transaction.Transaction;
+import cardsystem.transaction.TransactionType;
 
 public class RewardCalculator {
 	
@@ -25,9 +25,8 @@ public class RewardCalculator {
 	public int calculateRewardPoints(List<Transaction> transactions) {
 		int rewardPoints = 0;
 		for (Transaction t: transactions) {
-			if (t instanceof MerchantTransaction) {
-				MerchantTransaction merchantTransaction = (MerchantTransaction) t;
-				String merchant = merchantTransaction.getMerchant();
+			if (t.getTransactionType() == TransactionType.MERCHANT) {
+				String merchant = t.getCounterparty();
 				MerchantCategory category = MerchantCategory.getCategory(merchant);
 				double rewardMultiplier;
 				switch(category) {
@@ -46,7 +45,7 @@ public class RewardCalculator {
 					default:
 						rewardMultiplier = 1.5;
 				}
-				rewardPoints += (int) Math.round(merchantTransaction.getAmount() * rewardMultiplier);
+				rewardPoints += (int) Math.round(t.getAmount() * rewardMultiplier);
 			}
 		}
 		return rewardPoints;

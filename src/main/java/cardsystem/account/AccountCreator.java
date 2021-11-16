@@ -9,6 +9,7 @@ import cardsystem.approval.UserApprover;
 import cardsystem.creditbureau.Experian;
 import cardsystem.creditbureau.ExperianCreditReport;
 import cardsystem.database.DynamoDBCommunicator;
+import cardsystem.email.*;
 import cardsystem.user.User;
 import cardsystem.user.UserFetcher;
 
@@ -59,9 +60,11 @@ public class AccountCreator implements AccountFactory {
         }
 	}
 	
-	// Close account by appending " - CLOSED" to account name 
+	// Close account by appending " - CLOSED" to account name + notifying user by email
 	@Override
 	public void closeAccount(String accountId) {
+		// TODO - check if balance is 0 before closing
+		
 		Optional<cardsystem.database.models.Account> databaseAccount = AccountFetcher.loadAccountDatabaseModel(accountId);
 		Optional<CreditCardAccount> creditCardAccount = AccountFetcher.loadCreditCardAccount(accountId);
 		if (databaseAccount.isPresent()) {
@@ -72,11 +75,25 @@ public class AccountCreator implements AccountFactory {
 		}
 		if (creditCardAccount.isPresent()) {
 			CreditCardAccount foundAccount = creditCardAccount.get();
+			sendAccountClosureEmail(foundAccount);
 			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
 			foundAccount.setAccountName(closedAccountName);
 		}
 	}
 
+	private void sendAccountClosureEmail(Account account) {
+		Optional<User> user = UserFetcher.loadUser(account.getUserId());
+		if (user.isPresent()) {
+			String emailAddress = user.get().getEmailAddress();
+			if (emailAddress != null) {
+				Email email = new EmailFactory().getAccountEmail(account, emailAddress, "Account Closure", 
+						"You have successfully closed the account '" + account.getAccountNumber() + "' with the name '" 
+								+ account.getAccountName() + "'.");
+				new DefaultEmailSenderFactory().getEmailSender().send(email);
+			}
+		}
+	}
+	
 	public String createNewAccountNumber() {
 		StringBuilder builder = new StringBuilder();
 		Random random = new Random();
