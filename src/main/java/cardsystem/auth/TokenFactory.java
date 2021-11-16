@@ -1,4 +1,4 @@
-package cardsystem.Auth;
+package cardsystem.auth;
 
 import java.util.Base64;
 import java.util.Optional;
@@ -15,6 +15,10 @@ public class TokenFactory {
      */
     public static Optional<Token> getLoginToken(String email, String password) {
         return Optional.empty();
+    }
+
+    public static Token createToken(String authToken) {
+        return null;
     }
 
     /**
