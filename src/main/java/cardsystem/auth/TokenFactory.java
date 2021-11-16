@@ -1,6 +1,9 @@
-package cardsystem.auth;
+package cardsystem.Auth;
 
+import java.util.Base64;
 import java.util.Optional;
+
+
 
 public class TokenFactory {
 
@@ -19,7 +22,17 @@ public class TokenFactory {
      * @param authToken auth token
      * @return token instance
      */
-    public static Token createToken(String authToken) {
-        return null;
+
+public static String encode(String authToken) {
+
+    return Base64.getEncoder().encodeToString(authToken.getBytes());
+
+}
+
+public static String decode(String authToken) {
+
+    byte[] decodedBytes = Base64.getDecoder().decode(authToken);
+    return new String(decodedBytes);
+
     }
 }

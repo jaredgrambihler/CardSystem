@@ -1,4 +1,4 @@
-package cardsystem.auth;
+package cardsystem.Auth;
 
 import java.util.Collection;
 
