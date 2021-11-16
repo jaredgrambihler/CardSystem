@@ -11,4 +11,3 @@ public class CashAdvanceTransactionResponse {
         this.amount = amount;
     }
 }
-

@@ -20,3 +20,4 @@ public class MerchantTransactionResponse {
         this.isApproved = isApproved;
     }
 }
+

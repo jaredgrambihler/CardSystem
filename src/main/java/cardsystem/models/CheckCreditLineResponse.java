@@ -1,5 +1,7 @@
 package cardsystem.models;
 
+import java.util.List;
+
 public class CheckCreditLineResponse {
 
     private double balance;
@@ -26,8 +28,8 @@ public class CheckCreditLineResponse {
         return availableCredit;
     }
 
-    public void getAvailableCredit(int availableCredit){
-        this.availableCredit = availableCredit;
+    public void getAvailableCredit(List<Integer> creditLines){
+        this.availableCredit = creditLines;
     }
 
 }

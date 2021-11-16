@@ -1,8 +1,10 @@
 package cardsystem.models;
 
+import cardsystem.statement.StatementPeriod;
+
 public class CreateStatementRequest {
     private String accountId;
-    private String statementPeriodEnd;
+    private StatementPeriod statementPeriod;
     private String authToken;
 
     public String getAccountId(){
@@ -13,12 +15,12 @@ public class CreateStatementRequest {
         this.accountId = accountId;
     }
 
-    public String getStatementPeriodEnd(){
-        return statementPeriodEnd;
+    public StatementPeriod getStatementPeriod(){
+        return statementPeriod;
     }
 
-    public void setStatementPeriodEnd(String statementPeriodEnd){
-        this.statementPeriodEnd = statementPeriodEnd;
+    public void setStatementPeriod(StatementPeriod statementPeriod){
+        this.statementPeriod = statementPeriod;
     }
 
     public String getAuthToken(){

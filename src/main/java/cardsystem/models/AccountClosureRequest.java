@@ -1,6 +1,6 @@
 package cardsystem.models;
 
-public class AccountClosure {
+public class AccountClosureRequest {
     private String authToken;
     private String emailAddress;
     private String accountId;

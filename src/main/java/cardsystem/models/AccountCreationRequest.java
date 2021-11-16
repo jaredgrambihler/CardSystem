@@ -1,6 +1,6 @@
 package cardsystem.models;
 
-public class AccountCreation {
+public class AccountCreationRequest {
     private String userId;
     private String accountName;
     private int salary;
