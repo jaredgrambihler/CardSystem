@@ -3,8 +3,7 @@ package cardsystem.models;
 public class FetchStatementRequest {
     private String authToken;
     private String accountId;
-    private String startDate;
-    private String endDate;
+    private String date;
 
 
     public String getAuthToken(){
@@ -23,20 +22,12 @@ public class FetchStatementRequest {
         this.accountId = accountId;
     }
     
-    public String getStartDate(){
-      return startDate;
+    public String getDate(){
+        return date;
     }
 
-    public void setStartDate(String startDate){
-        this.startDate = startDate;
-    }
-
-    public String getEndDate(){
-        return endDate;
-    }
-
-    public void setEndDate(String endDate){
-        this.endDate = endDate;
+    public void setDate(String date){
+        this.date = date;
     }
 
 }

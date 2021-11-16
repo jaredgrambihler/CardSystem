@@ -3,13 +3,20 @@ package cardsystem.controller;
 import cardsystem.account.AccountCreator;
 import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
+import cardsystem.auth.Token;
+import cardsystem.auth.TokenFactory;
 import cardsystem.creditbureau.CreditReport;
 import cardsystem.creditbureau.CreditReportFetcher;
+import cardsystem.database.DateConverter;
 import cardsystem.models.*;
 import cardsystem.rewards.RewardFetcher;
 import cardsystem.rewards.RewardRedeemer;
+import cardsystem.statement.CreditCardStatement;
+import cardsystem.statement.CreditCardStatementCreator;
 import cardsystem.statement.CreditCardStatementFetcher;
 import cardsystem.statement.Statement;
+import cardsystem.statement.StatementPeriod;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -102,13 +109,25 @@ public class RequestHandler {
     }
 
     private static CreateStatementResponse getCreateStatement(String requestBody) {
-        CreateStatementRequest createStatement = gson.fromJson(requestBody, CreateStatementRequest.class);
-        String accountId = createStatement.getAccountId();
-        String authToken = createStatement.getAuthToken();
-
-        CreateStatementResponse createStatementResponse = new CreateStatementResponse();
-
-        return createStatementResponse;
+        CreateStatementRequest statementRequest = gson.fromJson(requestBody, CreateStatementRequest.class);
+        Token token = TokenFactory.createToken(statementRequest.getAuthToken()); 
+        String accountId = statementRequest.getAccountId();
+        String startDate = statementRequest.getStartDate();
+        String endDate = statementRequest.getEndDate();
+        CreateStatementResponse statementResponse = new CreateStatementResponse();
+        
+        if (accountId == null) {
+        	return statementResponse;
+        }
+        
+        if (token.getAccountIds().contains(accountId)) {
+        	StatementPeriod statementPeriod = new StatementPeriod(DateConverter.getLocalDate(startDate), DateConverter.getLocalDate(endDate));
+	        CreditCardStatement statement = new CreditCardStatementCreator().createStatement(accountId, statementPeriod);
+	        statementResponse.setAccountId(accountId);
+	        statementResponse.setBalance(statement.getBalance());
+	        statementResponse.setTransactions(statement.getTransactions());
+        }
+        return statementResponse;
     }
 
     private static EmailNotificationsResponse getEmailNotifications(String requestBody) {
@@ -122,12 +141,20 @@ public class RequestHandler {
     }
 
     private static FetchStatementResponse getFetchStatementPeriod(String requestBody) {
-        FetchStatementRequest fetchStatement = gson.fromJson(requestBody, FetchStatementRequest.class);
-        String accountId = fetchStatement.getAccountId();
-        Optional<Statement> latestStatement = new CreditCardStatementFetcher().getLatestStatement(accountId);
+        FetchStatementRequest fetchStatementPeriodRequest = gson.fromJson(requestBody, FetchStatementRequest.class);
+        String accountId = fetchStatementPeriodRequest.getAccountId();
+        Token token = TokenFactory.createToken(fetchStatementPeriodRequest.getAuthToken()); 
+        String date = fetchStatementPeriodRequest.getDate();
+        
         FetchStatementResponse fetchStatementResponse = new FetchStatementResponse();
-        if (latestStatement.isPresent()) {
-            fetchStatementResponse.setAccountId(latestStatement.get().getAccountId());
+        if (token.getAccountIds().contains(accountId)) {
+	        Optional<Statement> statement = new CreditCardStatementFetcher().getStatement(accountId, DateConverter.getLocalDateTime(date));
+	        if (statement.isPresent()) {
+	        	Statement creditCardStatement = statement.get();
+	            fetchStatementResponse.setAccountId(creditCardStatement.getAccountId());
+	            fetchStatementResponse.setBalance(creditCardStatement.getBalance());
+	            fetchStatementResponse.setTransactions(creditCardStatement.getTransactions());
+	        }
         }
         return fetchStatementResponse;
     }
