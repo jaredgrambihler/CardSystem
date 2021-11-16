@@ -1,9 +1,18 @@
 package cardsystem.models;
 
-public class AccountClosure {
-    private String accountId;
+public class AccountClosureRequest {
+    private String authToken;
     private String emailAddress;
+    private String accountId;
 
+
+    public String getAuthToken(){
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
+    }
 
     public String getAccountId(){
         return accountId;
@@ -12,7 +21,6 @@ public class AccountClosure {
     public void setAccountId(String accountId){
         this.accountId = accountId;
     }
-
     public String getEmailAddress(){
         return emailAddress;
     }

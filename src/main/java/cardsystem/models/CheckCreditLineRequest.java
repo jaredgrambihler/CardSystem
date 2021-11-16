@@ -1,8 +1,8 @@
 package cardsystem.models;
 
-public class BalancePayment {
+public class CheckCreditLineRequest {
     private String authToken;
-    private double balance;
+    private String ssn;
 
     public String getAuthToken(){
         return authToken;
@@ -12,11 +12,11 @@ public class BalancePayment {
         this.authToken = authToken;
     }
 
-    public double getBalance(){
-        return balance;
+    public String getSsn(){
+        return ssn;
     }
 
-    public void setBalance(double balance){
-        this.balance = balance;
+    public void setSsn(String ssn){
+        this.ssn = ssn;
     }
 }
