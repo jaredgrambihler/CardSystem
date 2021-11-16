@@ -1,18 +1,19 @@
 package cardsystem.models;
 
-public class CashAdvanceTransaction {
-     private String accountId;
+public class CashAdvanceTransactionRequest {
+     private String authToken;
      private double amount;
      private String transactionDate;
      private String postedDate;
+     private String accountId;
 
 
-    public String getAccountId() {
-        return accountId;
+     public String getAuthToken(){
+        return authToken;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAuthToken(String authToken){
+        this.authToken = authToken;
     }
 
     public double getAmount() {
@@ -37,5 +38,13 @@ public class CashAdvanceTransaction {
 
     public void setPostedDate(String postedDate) {
         this.postedDate = postedDate;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }

@@ -62,23 +62,20 @@ public class AccountCreator implements AccountFactory {
 	
 	// Close account by appending " - CLOSED" to account name + notifying user by email
 	@Override
-	public void closeAccount(String accountId) {
+	public boolean closeAccount(String accountId) {
 		// TODO - check if balance is 0 before closing
 		
 		Optional<cardsystem.database.models.Account> databaseAccount = AccountFetcher.loadAccountDatabaseModel(accountId);
 		Optional<CreditCardAccount> creditCardAccount = AccountFetcher.loadCreditCardAccount(accountId);
-		if (databaseAccount.isPresent()) {
+		if (databaseAccount.isPresent() && creditCardAccount.isPresent()) {
+			sendAccountClosureEmail(creditCardAccount.get());
 			cardsystem.database.models.Account foundAccount = databaseAccount.get();
 			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
 			foundAccount.setAccountName(closedAccountName);
 			new DynamoDBCommunicator().save(foundAccount);
+			return true;
 		}
-		if (creditCardAccount.isPresent()) {
-			CreditCardAccount foundAccount = creditCardAccount.get();
-			sendAccountClosureEmail(foundAccount);
-			String closedAccountName = foundAccount.getAccountName() + " - CLOSED";
-			foundAccount.setAccountName(closedAccountName);
-		}
+		return false;
 	}
 
 	private void sendAccountClosureEmail(Account account) {
