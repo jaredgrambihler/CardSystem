@@ -19,6 +19,10 @@ public class TokenFactory {
      */
 
     public static Optional<Token> getLoginToken(String email, String password) {
+        // is the email and password valid? --> no, then return empty optional
+        // if it is --> fetch the user in the db with that email.
+        // from that user --> create a token that encodes the user id and the associated account ids
+        // return the created token inside an optional
         return Optional.empty();
     }
 
@@ -30,6 +34,7 @@ public class TokenFactory {
      */
 
     public static Token createToken(String authToken) {
+        // decode the auth token into a token instance that has the userId and it's associated accounts
         return null;
     }
 
