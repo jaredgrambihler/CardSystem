@@ -1,9 +1,11 @@
 package cardsystem.balance;
 
+import cardsystem.account.AccountFetcher;
 import cardsystem.database.DynamoDBCommunicator;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 
 import java.util.*;
+import java.math.BigDecimal;
 
 public class BalanceFetcher {
     public static Balance getLatestBalance(String accountId) {
@@ -17,7 +19,8 @@ public class BalanceFetcher {
                 .withLimit(1)
         );
         if (results.size() == 0) {
-            return new Balance(accountId, balance.getBalance(), balance.getAvailableCredit());
+            
+            return new Balance(accountId, BigDecimal.valueOf(0), BigDecimal.valueOf(AccountFetcher.loadCreditCardAccount(accountId).get().getCreditLimit()));
         } else {
             return loadBalance(balance);
         }

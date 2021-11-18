@@ -27,11 +27,13 @@ public class TransactionHandler {
         if(amount.compareTo(BigDecimal.ZERO) > 0) {
             BigDecimal newCreditLimit = BigDecimal.valueOf(account.getCreditLimit()).add(amount);
             account.setCreditLimit(newCreditLimit.intValue());
+            balance.updateAvailableCredit(newCreditLimit);
             balance.saveToDatabase();
         }
         else {
-            BigDecimal newCreditLimit = BigDecimal.valueOf(account.getCreditLimit()).subtract(amount);
+            BigDecimal newCreditLimit = BigDecimal.valueOf(account.getCreditLimit()).add(amount);
             account.setCreditLimit(newCreditLimit.intValue());
+            balance.updateAvailableCredit(newCreditLimit);
             balance.saveToDatabase();
         }
         
