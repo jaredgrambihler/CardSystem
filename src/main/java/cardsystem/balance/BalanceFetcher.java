@@ -17,7 +17,7 @@ public class BalanceFetcher {
                 .withLimit(1)
         );
         if (results.size() == 0) {
-            return null;
+            return new Balance(accountId, balance.getBalance(), balance.getAvailableCredit());
         } else {
             return loadBalance(balance);
         }
