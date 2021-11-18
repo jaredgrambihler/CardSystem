@@ -15,7 +15,7 @@ public class TransactionHandler {
         Balance balance = BalanceFetcher.getLatestBalance(transaction.getAccountId());
         if (transaction.getPostedDate().isPresent()) {
             if (transaction.getAccountId() == balance.getAccountId()) {
-                BigDecimal currentBalance = balance.getBalance().subtract(BigDecimal.valueOf(transaction.getAmount()));
+                BigDecimal currentBalance = balance.getBalance().add(BigDecimal.valueOf(transaction.getAmount()));
                 balance.updateBalance(currentBalance);
             } 
         }
@@ -24,18 +24,9 @@ public class TransactionHandler {
 
     public void onCreditLimitChange(CreditCardAccount account, BigDecimal amount) {
         Balance balance = BalanceFetcher.getLatestBalance(account.getAccountId());
-        if(amount.compareTo(BigDecimal.ZERO) > 0) {
-            BigDecimal newCreditLimit = BigDecimal.valueOf(account.getCreditLimit()).add(amount);
-            account.setCreditLimit(newCreditLimit.intValue());
-            balance.updateAvailableCredit(newCreditLimit);
-            balance.saveToDatabase();
-        }
-        else {
-            BigDecimal newCreditLimit = BigDecimal.valueOf(account.getCreditLimit()).add(amount);
-            account.setCreditLimit(newCreditLimit.intValue());
-            balance.updateAvailableCredit(newCreditLimit);
-            balance.saveToDatabase();
-        }
+        BigDecimal newAvailableCredit = balance.getAvailableCredit().add(amount);
+        balance.updateAvailableCredit(newAvailableCredit);
+        balance.saveToDatabase();
         
     }
 }
