@@ -11,10 +11,22 @@ public class TransactionCreator {
             return Optional.empty();
         }
         // TODO - check account balance is sufficient
-        Transaction transaction = new TransactionImpl(createTransactionId(), accountId, amount,
-                counterparty, transactionDate, transactionType);
-        transaction.saveToDatabase();
-        return Optional.of(transaction);
+
+        ValidatedTransaction transaction = new ValidatedTransaction(
+                new TransactionImpl(createTransactionId(), accountId, amount,
+                    counterparty, transactionDate, transactionType
+                )
+        );
+        if (transactionType == TransactionType.MERCHANT) {
+            // demonstrate decorator pattern to validate amounts on merchant transactions
+            transaction = new PositiveTransaction(transaction);
+        }
+        if (transaction.isValid()) {
+            transaction.saveToDatabase();
+            return Optional.of(transaction);
+        } else {
+            return Optional.empty();
+        }
     }
 
     private String createTransactionId() {
