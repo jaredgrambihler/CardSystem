@@ -12,7 +12,7 @@ public class TransactionCreator {
         }
         // TODO - check account balance is sufficient
         Transaction transaction = new TransactionImpl(createTransactionId(), accountId, amount,
-                counterparty, transactionDate, Optional.empty(), transactionType);
+                counterparty, transactionDate, transactionType);
         transaction.saveToDatabase();
         return Optional.of(transaction);
     }

@@ -14,7 +14,7 @@ public class TransactionImpl implements Transaction {
     private double amount;
     private String counterparty;
     private LocalDateTime transactionDate;
-    private Optional<LocalDateTime> postedDate;
+    private PostedState postedState;
     private TransactionType transactionType;
 
     /**
@@ -24,19 +24,37 @@ public class TransactionImpl implements Transaction {
      * @param amount the amount of the transaction
      * @param counterparty the counterparty of the transaction, such as the merchant or bank on the other side
      * @param transactionDate the date the transaction occurred
-     * @param postedDate the date the transaction posted, which is empty if the transaction has not yet posted
      * @param transactionType the type of transaction
      */
     public TransactionImpl(String transactionId, String accountId, double amount, String counterparty,
-                           LocalDateTime transactionDate, Optional<LocalDateTime> postedDate,
-                           TransactionType transactionType) {
+                           LocalDateTime transactionDate, TransactionType transactionType) {
+        this(transactionId, accountId, amount, counterparty, transactionDate, transactionType, null);
+    }
+
+    /**
+     * Create a transaction.
+     * @param transactionId unique id of the transaction
+     * @param accountId the account that made the transaction
+     * @param amount the amount of the transaction
+     * @param counterparty the counterparty of the transaction, such as the merchant or bank on the other side
+     * @param transactionDate the date the transaction occurred
+     * @param transactionType the type of transaction
+     * @param postedDate the posted date of the transaction, or null if it hasn't posted
+     */
+    public TransactionImpl(String transactionId, String accountId, double amount, String counterparty,
+                           LocalDateTime transactionDate, TransactionType transactionType,
+                           LocalDateTime postedDate) {
         this.transactionId = transactionId;
         this.accountId = accountId;
         this.amount = amount;
         this.counterparty = counterparty;
         this.transactionDate = transactionDate;
-        this.postedDate = postedDate;
         this.transactionType = transactionType;
+        if (postedDate == null) {
+            this.postedState = new PendingTransactionState();
+        } else {
+            this.postedState = new PostedTransactionState(postedDate);
+        }
     }
 
     @Override
@@ -65,8 +83,13 @@ public class TransactionImpl implements Transaction {
     }
 
     @Override
+    public boolean isPosted() {
+        return postedState.isPosted();
+    }
+
+    @Override
     public Optional<LocalDateTime> getPostedDate() {
-        return postedDate;
+        return postedState.getPostedDate();
     }
 
     @Override
@@ -83,7 +106,7 @@ public class TransactionImpl implements Transaction {
         if(postedDate.isBefore(transactionDate)) {
             throw new IllegalArgumentException("Posted date cannot be before transaction date");
         }
-        this.postedDate = Optional.of(postedDate);
+        this.postedState = new PostedTransactionState(postedDate);
     }
 
     public void saveToDatabase() {
@@ -100,7 +123,7 @@ public class TransactionImpl implements Transaction {
         transaction.setAccountId(getAccountId());
         transaction.setCounterparty(getCounterparty());
         transaction.setTransactionDate(DateConverter.getIso8601Timestamp(getTransactionDate()));
-        if (postedDate.isPresent()) {
+        if (isPosted()) {
             transaction.setPostedDate(DateConverter.getIso8601Timestamp(getPostedDate().get()));
         } else {
             transaction.setPostedDate(null);
