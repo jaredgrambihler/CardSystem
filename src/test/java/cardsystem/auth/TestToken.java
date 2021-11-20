@@ -2,6 +2,9 @@ package cardsystem.auth;
 
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
+
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 public class TestToken {
@@ -13,12 +16,13 @@ public class TestToken {
         String issuer = "JWT Demo";
         String subject = "Nathan";
 
-        String jwt = TokenFactory.encodeJWT(
+        String jwt = JwtEncoder.encodeJWT(
                 accountId,
                 issuer,
-                subject
+                subject,
+                new HashMap<>()
         );
-        Claims claims = TokenFactory.decodeJWT(jwt);
+        Claims claims = JwtEncoder.decodeJWT(jwt);
         assertEquals(accountId, claims.getId());
         assertEquals(issuer, claims.getIssuer());
         assertEquals(subject, claims.getSubject());
