@@ -17,6 +17,8 @@ public interface Transaction extends DatabaseSaver {
 
     LocalDateTime getTransactionDate();
 
+    boolean isPosted();
+
     Optional<LocalDateTime> getPostedDate();
 
     TransactionType getTransactionType();
