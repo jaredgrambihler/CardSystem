@@ -1,12 +1,10 @@
 package cardsystem.auth;
 
-import java.util.Base64;
-import java.util.Optional;
-import io.jsonwebtoken.*;
-import java.security.Key;
-import javax.crypto.spec.SecretKeySpec;
-import jakarta.xml.bind.DatatypeConverter;
-import io.jsonwebtoken.SignatureAlgorithm;
+import cardsystem.user.User;
+import cardsystem.user.UserFetcher;
+import io.jsonwebtoken.Claims;
+
+import java.util.*;
 
 public class TokenFactory {
 
@@ -17,9 +15,22 @@ public class TokenFactory {
      * @param password users password
      * @return a token if the login is valid, an empty optional if it is invalid
      */
-
     public static Optional<Token> getLoginToken(String email, String password) {
-        return Optional.empty();
+        if (!isValidPassword(email, password)) {
+            return Optional.empty();
+        }
+        Optional<User> userOptional = UserFetcher.loadUserFromEmail(email);
+        if (!userOptional.isPresent()) {
+            return Optional.empty();
+        }
+        User user = userOptional.get();
+        String userId = user.getUserId();
+        Collection<String> accountIds = user.getAccountIds();
+        Map<String, Object> tokenHeaders = new HashMap<>();
+        tokenHeaders.put("userId", userId);
+        tokenHeaders.put("accountIds", accountIds);
+        String encodedToken = JwtEncoder.encodeJWT("Account id", "Card System", "Subject", tokenHeaders);
+        return Optional.of(new JwtToken(userId, accountIds, encodedToken));
     }
 
     /**
@@ -28,32 +39,24 @@ public class TokenFactory {
      * @param authToken auth token
      * @return token instance
      */
-
-    public static Token createToken(String authToken) {
-        return null;
+    public static Optional<Token> createToken(String authToken) {
+        Claims claims = JwtEncoder.decodeJWT(authToken);
+        String userId = (String) claims.getOrDefault("userId", null);
+        Collection<String> accountIds = (Collection<String>) claims.getOrDefault("accountIds", null);
+        if (userId == null || accountIds == null || !isValidToken(claims)) {
+            return Optional.empty();
+        }
+        return Optional.of(new JwtToken(userId, accountIds, authToken));
     }
 
-    public static final String secretKey = "4C8kum4LxyKWYLM78sKdXrzbBjDCFyfX";
-
-
-    public static String encodeJWT(String accountId, String issuer, String subject) {
-
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
-
-        JwtBuilder builder = Jwts.builder().setId(accountId).setSubject(subject).setIssuer(issuer)
-                .signWith(signatureAlgorithm, signingKey);
-        return builder.compact();
+    private static boolean isValidPassword(String email, String password) {
+        // for sake of simplicity of the project, we'll always say a password is valid
+        return true;
     }
 
-    
-    public static Claims decodeJWT(String jwt) {
-        Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretKey)).parseClaimsJws(jwt)
-                .getBody();
-        return claims;
+    private static boolean isValidToken(Claims claims) {
+        return claims.getExpiration().after(new Date()) &&
+                claims.getIssuer().equals("Card System");
     }
+
 }

@@ -91,17 +91,17 @@ public class RequestHandler {
 
     private static TransactionResponse makeTransaction(String requestBody, TransactionType transactionType) {
         TransactionRequest transactionRequest = gson.fromJson(requestBody, TransactionRequest.class);
-        Token token = TokenFactory.createToken(transactionRequest.getAuthToken());
+        Optional<Token> tokenOptional = TokenFactory.createToken(transactionRequest.getAuthToken());
         String accountId = transactionRequest.getAccountId();
         String counterparty = transactionRequest.getCounterparty();
         TransactionResponse transactionResponse = new TransactionResponse();
         transactionResponse.setApproved(false);
 
         // check arguments are valid for creating a transaction, else return
-        if (accountId == null || counterparty == null) {
+        if (accountId == null || counterparty == null || tokenOptional.isEmpty()) {
             return transactionResponse;
         }
-
+        Token token = tokenOptional.get();
         if (token.getAccountIds().contains(accountId)) {
             Optional<Transaction> transaction = new TransactionCreator().createTransaction(
                     accountId,
@@ -140,16 +140,17 @@ public class RequestHandler {
 
     private static CreateStatementResponse getCreateStatement(String requestBody) {
         CreateStatementRequest statementRequest = gson.fromJson(requestBody, CreateStatementRequest.class);
-        Token token = TokenFactory.createToken(statementRequest.getAuthToken()); 
+        Optional<Token> tokenOptional = TokenFactory.createToken(statementRequest.getAuthToken());
         String accountId = statementRequest.getAccountId();
         String startDate = statementRequest.getStartDate();
         String endDate = statementRequest.getEndDate();
         CreateStatementResponse statementResponse = new CreateStatementResponse();
         
-        if (accountId == null) {
+        if (accountId == null || tokenOptional.isEmpty()) {
         	return statementResponse;
         }
-        
+
+        Token token = tokenOptional.get();
         if (token.getAccountIds().contains(accountId)) {
         	StatementPeriod statementPeriod = new StatementPeriod(DateConverter.getLocalDate(startDate), DateConverter.getLocalDate(endDate));
 	        CreditCardStatement statement = new CreditCardStatementCreator().createStatement(accountId, statementPeriod);
@@ -163,11 +164,11 @@ public class RequestHandler {
     private static FetchStatementResponse getFetchStatementPeriod(String requestBody) {
         FetchStatementRequest fetchStatementPeriodRequest = gson.fromJson(requestBody, FetchStatementRequest.class);
         String accountId = fetchStatementPeriodRequest.getAccountId();
-        Token token = TokenFactory.createToken(fetchStatementPeriodRequest.getAuthToken()); 
+        Optional<Token> tokenOptional = TokenFactory.createToken(fetchStatementPeriodRequest.getAuthToken());
         String date = fetchStatementPeriodRequest.getDate();
         
         FetchStatementResponse fetchStatementResponse = new FetchStatementResponse();
-        if (token.getAccountIds().contains(accountId)) {
+        if (tokenOptional.isPresent() && tokenOptional.get().getAccountIds().contains(accountId)) {
 	        Optional<Statement> statement = new CreditCardStatementFetcher().getStatement(accountId, DateConverter.getLocalDateTime(date));
 	        if (statement.isPresent()) {
 	        	Statement creditCardStatement = statement.get();
@@ -193,7 +194,8 @@ public class RequestHandler {
         String authToken = accountClosure.getAuthToken();
         String accountId = accountClosure.getAccountId();
         boolean closed = false;
-        if (TokenFactory.createToken(authToken).getAccountIds().contains(accountId)) {
+        Optional<Token> tokenOptional = TokenFactory.createToken(authToken);
+        if (tokenOptional.isPresent() && tokenOptional.get().getAccountIds().contains(accountId)) {
             closed = new AccountCreator().closeAccount(accountId);
         }
         AccountClosureResponse accountClosureResponse = new AccountClosureResponse();
@@ -223,11 +225,11 @@ public class RequestHandler {
 
     private static ListTransactionsResponse getTransactions(String requestBody) {
         ListTransactionsRequest listTransactions = gson.fromJson(requestBody, ListTransactionsRequest.class);
-        Token token = TokenFactory.createToken(listTransactions.getAuthToken());
+        Optional<Token> tokenOptional = TokenFactory.createToken(listTransactions.getAuthToken());
         String accountId = listTransactions.getAccountId();
 
         ListTransactionsResponse listTransactionsResponse = new ListTransactionsResponse();
-        if (!token.getAccountIds().contains(accountId)) {
+        if (tokenOptional.isEmpty() || !tokenOptional.get().getAccountIds().contains(accountId)) {
             return listTransactionsResponse;
         }
         LocalDateTime startTime = DateConverter.getLocalDateTime(listTransactions.getStartTime());
@@ -252,8 +254,10 @@ public class RequestHandler {
         String password = accountLogin.getPassword();
         String authToken = "";
         if (emailAddress != null && password != null) {
-            // TODO - fetch auth token
-            authToken = "MyAuthToken";
+            Optional<Token> tokenOptional = TokenFactory.getLoginToken(emailAddress, password);
+            if (tokenOptional.isPresent()) {
+                authToken = tokenOptional.get().encode();
+            }
         }
         AccountLoginResponse accountLoginResponse = new AccountLoginResponse();
         accountLoginResponse.setAuthToken(authToken);

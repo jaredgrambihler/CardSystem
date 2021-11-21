@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "User")
@@ -48,7 +49,7 @@ public class User {
     this.income = income;
   } 
 
-  @DynamoDBAttribute(attributeName = "emailAddress")
+  @DynamoDBIndexHashKey(attributeName = "emailAddress", globalSecondaryIndexName = "emailIndex")
   public String getEmailAddress() {
     return emailAddress;
   }

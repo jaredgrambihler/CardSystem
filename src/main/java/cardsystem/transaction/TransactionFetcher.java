@@ -58,17 +58,17 @@ public class TransactionFetcher {
                 transaction.getAmount().doubleValue(),
                 transaction.getCounterparty(),
                 DateConverter.getLocalDateTime(transaction.getTransactionDate()),
-                getPostedDate(transaction),
-                transactionType
+                transactionType,
+                getPostedDate(transaction)
         );
     }
 
-    private static Optional<LocalDateTime> getPostedDate(cardsystem.database.models.Transaction transaction) {
-        Optional<LocalDateTime> postedDate = Optional.empty();
+    private static LocalDateTime getPostedDate(cardsystem.database.models.Transaction transaction) {
         if (transaction.getPostedDate() != null) {
-            postedDate = Optional.of(DateConverter.getLocalDateTime(transaction.getPostedDate()));
+            return DateConverter.getLocalDateTime(transaction.getPostedDate());
+        } else {
+            return null;
         }
-        return postedDate;
     }
 
 }

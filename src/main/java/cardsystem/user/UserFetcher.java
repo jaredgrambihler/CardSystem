@@ -27,6 +27,24 @@ public class UserFetcher {
         }
         return Optional.empty();
 	}
+
+    public static Optional<User> loadUserFromEmail(String email) {
+        cardsystem.database.models.User user = new cardsystem.database.models.User();
+        user.setEmailAddress(email);
+        List<cardsystem.database.models.User> results = new DynamoDBCommunicator()
+                .query(
+                        cardsystem.database.models.User.class,
+                        new DynamoDBQueryExpression<cardsystem.database.models.User>()
+                                .withHashKeyValues(user)
+                                .withIndexName("emailIndex")
+                );
+        if (results.isEmpty()) {
+            return Optional.empty();
+        } else {
+            cardsystem.database.models.User foundUser = results.get(0);
+            return Optional.of(loadUserFromDatabaseModel(foundUser));
+        }
+    }
 	
 	public static User loadUserFromDatabaseModel(cardsystem.database.models.User user) {
         return new User(user.getName(), user.getSsn(),

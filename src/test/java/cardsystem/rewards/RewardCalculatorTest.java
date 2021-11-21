@@ -72,6 +72,6 @@ public class RewardCalculatorTest {
      * @return a merchant transaction
      */
     private static Transaction createMerchantTransaction(String merchant, double amount) {
-        return new TransactionImpl("fakeId1234", "fakeAccountId1234", amount, merchant, LocalDateTime.now(), Optional.empty(), TransactionType.MERCHANT);
+        return new TransactionImpl("fakeId1234", "fakeAccountId1234", amount, merchant, LocalDateTime.now(), TransactionType.MERCHANT);
     }
 }
