@@ -1,14 +1,16 @@
 package cardsystem.models;
 
+import java.math.BigDecimal;
+
 public class BalanceCheckRequest {
     private String authToken;
-    private double balance;
+    private BigDecimal balance;
 
-    public double getBalance(){
+    public BigDecimal getBalance(){
         return balance;
     }
 
-    public void setBalance(double balance){
+    public void setBalance(BigDecimal balance){
         this.balance = balance;
     }
 
