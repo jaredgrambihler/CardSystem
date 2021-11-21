@@ -1,20 +1,9 @@
 package cardsystem.models;
 
 public class UserApplicationRequest {
-    private String authToken;
     private int age;
     private String ssn;
-    private String validEmail;
-    private int validSalary;
-    private int creditScore;
-
-    public String getAuthToken(){
-        return authToken;
-    }
-
-    public void setAuthToken(String authToken){
-        this.authToken = authToken;
-    }
+    private String email;
     
     public int getAge(){
         return age;
@@ -32,27 +21,12 @@ public class UserApplicationRequest {
         this.ssn = ssn;
     }
 
-    public String getValidEmail(){
-        return validEmail;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setValidEmail(String validEmail) {
-        this.validEmail = validEmail;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public int getValidSalary(){
-        return validSalary;
-    }
-
-    public void setValidSalary(int validSalary){
-        this.validSalary = validSalary;
-    }
-
-    public int getCreditScore(){
-        return creditScore;
-    }
-
-    public void setCreditScore(int creditScore){
-        this.creditScore = creditScore;
-    }
 }

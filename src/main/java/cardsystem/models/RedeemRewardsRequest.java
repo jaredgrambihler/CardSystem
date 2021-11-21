@@ -3,6 +3,15 @@ package cardsystem.models;
 public class RedeemRewardsRequest {
 	private String accountId;
 	private int amount;
+	private String authToken;
+
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
 
 	public String getAccountId() {
 		return accountId;

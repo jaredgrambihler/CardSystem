@@ -3,8 +3,11 @@ package cardsystem.controller;
 import cardsystem.account.AccountCreator;
 import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
+import cardsystem.approval.UserApprover;
 import cardsystem.auth.Token;
 import cardsystem.auth.TokenFactory;
+import cardsystem.balance.Balance;
+import cardsystem.balance.BalanceFetcher;
 import cardsystem.creditbureau.CreditReport;
 import cardsystem.creditbureau.CreditReportFetcher;
 import cardsystem.database.DateConverter;
@@ -46,12 +49,6 @@ public class RequestHandler {
                 break;
             case "CheckBalance":
                 jsonObject = getBalanceCheck(requestBody);
-                break;
-            case "CheckCreditLine":
-                jsonObject = getCheckCreditLine(requestBody);
-                break;
-            case "CreditLimitCheck":
-                jsonObject = getCreditLimitCheck(requestBody);
                 break;
             case "ListTransactions":
                 jsonObject = getTransactions(requestBody);
@@ -180,15 +177,6 @@ public class RequestHandler {
         return fetchStatementResponse;
     }
 
-    private static CheckCreditLineResponse getCheckCreditLine(String requestBody) {
-        CheckCreditLineRequest checkCreditLine = gson.fromJson(requestBody, CheckCreditLineRequest.class);
-        String ssn = checkCreditLine.getSsn();
-        Optional<CreditReport> creditReport = new CreditReportFetcher().loadCreditReport(ssn);
-        CheckCreditLineResponse checkCreditLineResponse = new CheckCreditLineResponse();
-        checkCreditLineResponse.getAvailableCredit();
-        return checkCreditLineResponse;
-    }
-
     private static AccountClosureResponse closeAccount(String requestBody) {
         AccountClosureRequest accountClosure = gson.fromJson(requestBody, AccountClosureRequest.class);
         String authToken = accountClosure.getAuthToken();
@@ -201,26 +189,6 @@ public class RequestHandler {
         AccountClosureResponse accountClosureResponse = new AccountClosureResponse();
         accountClosureResponse.setClosed(closed);
         return accountClosureResponse;
-    }
-
-    // What is this method looking for? CreditLimitCheck is not containing credit limit
-    private static CreditLimitCheck getCreditLimitCheck(String requestBody) {
-        CreditLimitCheck creditLimitCheck = gson.fromJson(requestBody, CreditLimitCheck.class);
-        String accountId = creditLimitCheck.getAccountId();
-        String ssn = creditLimitCheck.getSsn();
-        int creditScore = creditLimitCheck.getCreditScore();
-        int salary = creditLimitCheck.getSalary();
-        
-        Optional<CreditCardAccount> creditCardAccountOptional = AccountFetcher.loadCreditCardAccount(accountId);
-        if (creditCardAccountOptional.isPresent()) {
-        	// Want to add credit limit to some attribute and return?
-        } 
-        
-        creditLimitCheck.setAccountId(accountId);
-        creditLimitCheck.setSsn(ssn);
-        creditLimitCheck.setSalary(salary);
-        
-        return creditLimitCheck;
     }
 
     private static ListTransactionsResponse getTransactions(String requestBody) {
@@ -241,10 +209,19 @@ public class RequestHandler {
 
     private static BalanceCheckResponse getBalanceCheck(String requestBody) {
         BalanceCheckRequest balanceCheck = gson.fromJson(requestBody, BalanceCheckRequest.class);
-        String authToken = balanceCheck.getAuthToken();
-        double balance = balanceCheck.getBalance();
+        Optional<Token> tokenOptional = TokenFactory.createToken(balanceCheck.getAuthToken());
+        String accountId = balanceCheck.getAccountId();
+        
         BalanceCheckResponse balanceCheckResponse = new BalanceCheckResponse();
-        // To-do
+        if (tokenOptional.isPresent() && tokenOptional.get().getAccountIds().contains(accountId)) {
+            Balance balance = BalanceFetcher.getLatestBalance(accountId);
+            balanceCheckResponse.setBalance(balance.getBalance());
+            balanceCheckResponse.setAvailableCredit(balance.getAvailableCredit());
+            Optional<CreditCardAccount> account = AccountFetcher.loadCreditCardAccount(accountId);
+            if (account.isPresent()) {
+            	 balanceCheckResponse.setCreditLimit(account.get().getCreditLimit());
+            }
+        }
         return balanceCheckResponse;
     }
 
@@ -268,32 +245,32 @@ public class RequestHandler {
         UserApplicationRequest userApplication = gson.fromJson(requestBody, UserApplicationRequest.class);
         int age = userApplication.getAge();
         String ssn = userApplication.getSsn();
-        String validEmail = userApplication.getValidEmail();
-        // UserApprover userApprover = new UserApprover().isApproved(age, ssn, validEmail);
+        String email = userApplication.getEmail();
+       
         UserApplicationResponse userApplicationResponse = new UserApplicationResponse();
-        if (userApplicationResponse.getIsValid()) {
-            userApplicationResponse.setIsValid(true);
-            System.out.println("You are approved!");
+        if (UserApprover.isApproved(age, ssn, email)) {
+        	userApplicationResponse.setApproved(true);
         } else {
-            userApplicationResponse.setIsValid(false);
-            System.out.println("You are not approved!");
+        	userApplicationResponse.setApproved(false);
         }
         return userApplicationResponse;
     }
 
     private static RedeemRewardsResponse getRedeemRewards(String requestBody) {
 		RedeemRewardsRequest redeemRewardsRequest = gson.fromJson(requestBody, RedeemRewardsRequest.class);
+		Optional<Token> tokenOptional = TokenFactory.createToken(redeemRewardsRequest.getAuthToken());
 		String accountId = redeemRewardsRequest.getAccountId();
 		int amount = redeemRewardsRequest.getAmount();
 		
 		RedeemRewardsResponse redeemRewardsResponse = new RedeemRewardsResponse();
-		int previousRewards = RewardFetcher.getCurrentRewardPoints(accountId);
-		new RewardRedeemer().redeemPoints(amount, accountId);
-		int updatedRewards = RewardFetcher.getCurrentRewardPoints(accountId);
-		if (updatedRewards == previousRewards - amount) {
-			redeemRewardsResponse.setRedeemed(true);
-		} else {
-			redeemRewardsResponse.setRedeemed(false);
+		redeemRewardsResponse.setRedeemed(false);
+		if (tokenOptional.isPresent() && tokenOptional.get().getAccountIds().contains(accountId)) {
+			int previousRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+			new RewardRedeemer().redeemPoints(amount, accountId);
+			int updatedRewards = RewardFetcher.getCurrentRewardPoints(accountId);
+			if (updatedRewards == previousRewards - amount) {
+				redeemRewardsResponse.setRedeemed(true);
+			}
 		}
 		return redeemRewardsResponse;
 	}

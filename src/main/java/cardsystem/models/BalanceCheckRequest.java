@@ -1,18 +1,16 @@
 package cardsystem.models;
 
-import java.math.BigDecimal;
-
 public class BalanceCheckRequest {
     private String authToken;
-    private BigDecimal balance;
+    private String accountId;
 
-    public BigDecimal getBalance(){
-        return balance;
-    }
+    public String getAccountId() {
+		return accountId;
+	}
 
-    public void setBalance(BigDecimal balance){
-        this.balance = balance;
-    }
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
 
     public String getAuthToken(){
         return authToken;

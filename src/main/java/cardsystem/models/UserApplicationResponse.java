@@ -2,13 +2,15 @@ package cardsystem.models;
 
 public class UserApplicationResponse {
 
-    private boolean isValid;
+    private boolean isApproved;
 
-    public boolean getIsValid(){
-        return isValid;
-    }
+	public boolean isApproved() {
+		return isApproved;
+	}
 
-    public void setIsValid(boolean isValid){
-        this.isValid = isValid;
-    }
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
+
+   
 }
