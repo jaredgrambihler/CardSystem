@@ -3,13 +3,10 @@ package cardsystem.controller;
 import cardsystem.account.AccountCreator;
 import cardsystem.account.AccountFetcher;
 import cardsystem.account.CreditCardAccount;
-import cardsystem.approval.UserApprover;
 import cardsystem.auth.Token;
 import cardsystem.auth.TokenFactory;
 import cardsystem.balance.Balance;
 import cardsystem.balance.BalanceFetcher;
-import cardsystem.creditbureau.CreditReport;
-import cardsystem.creditbureau.CreditReportFetcher;
 import cardsystem.database.DateConverter;
 import cardsystem.models.*;
 import cardsystem.rewards.RewardFetcher;
@@ -51,31 +48,31 @@ public class RequestHandler {
                 jsonObject = makeTransaction(requestBody, TransactionType.CASH_ADVANCE);
                 break;
             case "CheckBalance":
-                jsonObject = getBalanceCheck(requestBody);
+                jsonObject = checkBalance(requestBody);
                 break;
             case "ListTransactions":
                 jsonObject = getTransactions(requestBody);
                 break;
             case "FetchStatementPeriod":
-                jsonObject = getFetchStatementPeriod(requestBody);
+                jsonObject = fetchStatementPeriod(requestBody);
                 break;
-            case "AccountLogin":
-                jsonObject = getAccountLogin(requestBody);
+            case "UserLogin":
+                jsonObject = userLogin(requestBody);
                 break;
             case "AccountClosure":
                 jsonObject = closeAccount(requestBody);
                 break;
             case "CreateStatement":
-                jsonObject = getCreateStatement(requestBody);
+                jsonObject = createStatement(requestBody);
                 break;
-            case "AccountApply":
-                jsonObject = getUserApplication(requestBody);
+            case "UserAccountApplication":
+                jsonObject = submitUserAccountApplication(requestBody);
                 break;
-            case "AccountCreation":
-                jsonObject = getAccountCreation(requestBody);
+            case "CreditCardAccountApplication":
+                jsonObject = submitCreditCardAccountApplication(requestBody);
                 break;
             case "RedeemRewards":
-            	jsonObject = getRedeemRewards(requestBody);
+            	jsonObject = redeemRewards(requestBody);
                 break;
             default:
                 // Unknown action
@@ -118,7 +115,7 @@ public class RequestHandler {
         return transactionResponse;
     }
 
-    private static AccountCreationResponse getAccountCreation(String requestBody) {
+    private static AccountCreationResponse submitCreditCardAccountApplication(String requestBody) {
         AccountCreationRequest accountCreation = gson.fromJson(requestBody, AccountCreationRequest.class);
         String userId = accountCreation.getUserId();
         String accountName = accountCreation.getAccountName();
@@ -138,7 +135,7 @@ public class RequestHandler {
         return accountCreationResponse;
     }
 
-    private static CreateStatementResponse getCreateStatement(String requestBody) {
+    private static CreateStatementResponse createStatement(String requestBody) {
         CreateStatementRequest statementRequest = gson.fromJson(requestBody, CreateStatementRequest.class);
         Optional<Token> tokenOptional = TokenFactory.createToken(statementRequest.getAuthToken());
         String accountId = statementRequest.getAccountId();
@@ -146,7 +143,7 @@ public class RequestHandler {
         String endDate = statementRequest.getEndDate();
         CreateStatementResponse statementResponse = new CreateStatementResponse();
         
-        if (accountId == null || tokenOptional.isEmpty()) {
+        if (accountId == null || tokenOptional.isEmpty() || startDate == null || endDate == null) {
         	return statementResponse;
         }
 
@@ -161,7 +158,7 @@ public class RequestHandler {
         return statementResponse;
     }
 
-    private static FetchStatementResponse getFetchStatementPeriod(String requestBody) {
+    private static FetchStatementResponse fetchStatementPeriod(String requestBody) {
         FetchStatementRequest fetchStatementPeriodRequest = gson.fromJson(requestBody, FetchStatementRequest.class);
         String accountId = fetchStatementPeriodRequest.getAccountId();
         Optional<Token> tokenOptional = TokenFactory.createToken(fetchStatementPeriodRequest.getAuthToken());
@@ -210,7 +207,7 @@ public class RequestHandler {
         return listTransactionsResponse;
     }
 
-    private static BalanceCheckResponse getBalanceCheck(String requestBody) {
+    private static BalanceCheckResponse checkBalance(String requestBody) {
         BalanceCheckRequest balanceCheck = gson.fromJson(requestBody, BalanceCheckRequest.class);
         Optional<Token> tokenOptional = TokenFactory.createToken(balanceCheck.getAuthToken());
         String accountId = balanceCheck.getAccountId();
@@ -228,7 +225,7 @@ public class RequestHandler {
         return balanceCheckResponse;
     }
 
-    private static AccountLoginResponse getAccountLogin(String requestBody) {
+    private static AccountLoginResponse userLogin(String requestBody) {
         AccountLoginRequest accountLogin = gson.fromJson(requestBody, AccountLoginRequest.class);
         String emailAddress = accountLogin.getEmailAddress();
         String password = accountLogin.getPassword();
@@ -244,7 +241,7 @@ public class RequestHandler {
         return accountLoginResponse;
     }
 
-    private static UserApplicationResponse getUserApplication(String requestBody) {
+    private static UserApplicationResponse submitUserAccountApplication(String requestBody) {
         UserApplicationRequest userApplication = gson.fromJson(requestBody, UserApplicationRequest.class);
         String ssn = userApplication.getSsn();
         String email = userApplication.getEmail();
@@ -261,7 +258,7 @@ public class RequestHandler {
         return userApplicationResponse;
     }
 
-    private static RedeemRewardsResponse getRedeemRewards(String requestBody) {
+    private static RedeemRewardsResponse redeemRewards(String requestBody) {
 		RedeemRewardsRequest redeemRewardsRequest = gson.fromJson(requestBody, RedeemRewardsRequest.class);
 		Optional<Token> tokenOptional = TokenFactory.createToken(redeemRewardsRequest.getAuthToken());
 		String accountId = redeemRewardsRequest.getAccountId();
