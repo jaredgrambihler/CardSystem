@@ -23,10 +23,13 @@ import cardsystem.transaction.Transaction;
 import cardsystem.transaction.TransactionCreator;
 import cardsystem.transaction.TransactionFetcher;
 import cardsystem.transaction.TransactionType;
+import cardsystem.user.*;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -243,16 +246,18 @@ public class RequestHandler {
 
     private static UserApplicationResponse getUserApplication(String requestBody) {
         UserApplicationRequest userApplication = gson.fromJson(requestBody, UserApplicationRequest.class);
-        int age = userApplication.getAge();
         String ssn = userApplication.getSsn();
         String email = userApplication.getEmail();
-       
+        String name = userApplication.getName();
+        String birthDate = userApplication.getBirthDate();
+        BigInteger income = userApplication.getIncome();
         UserApplicationResponse userApplicationResponse = new UserApplicationResponse();
-        if (UserApprover.isApproved(age, ssn, email)) {
+        userApplicationResponse.setApproved(false);
+        
+        Optional<User> user = new UserCreator().createNewUser(name, ssn, email, income, DateConverter.getLocalDate(birthDate));
+        if (user.isPresent()) {
         	userApplicationResponse.setApproved(true);
-        } else {
-        	userApplicationResponse.setApproved(false);
-        }
+        } 
         return userApplicationResponse;
     }
 

@@ -1,19 +1,39 @@
 package cardsystem.models;
 
+import java.math.BigInteger;
+
 public class UserApplicationRequest {
-    private int age;
     private String ssn;
     private String email;
-    
-    public int getAge(){
-        return age;
-    }
+    private String name;
+    private String birthDate;
+    private BigInteger income;
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+    public String getName() {
+		return name;
+	}
 
-    public String getSsn(){
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(String birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public BigInteger getIncome() {
+		return income;
+	}
+
+	public void setIncome(BigInteger income) {
+		this.income = income;
+	}
+
+	public String getSsn(){
         return ssn;
     }
 
