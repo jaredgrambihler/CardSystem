@@ -75,6 +75,7 @@ public class User implements UserInterface {
                 cardsystem.database.models.Account.class,
                 new DynamoDBQueryExpression<cardsystem.database.models.Account>()
                         .withHashKeyValues(queryModel)
+                        .withIndexName("userIdIndex")
         );
         List<String> accountIds = new ArrayList<>();
         for (cardsystem.database.models.Account accountModel : results) {

@@ -2,6 +2,7 @@ package cardsystem.database.models;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "Account")
@@ -37,7 +38,7 @@ public class Account {
     this.accountNumber = accountNumber;
   } 
 
-  @DynamoDBAttribute(attributeName = "userId")
+  @DynamoDBIndexHashKey(attributeName = "userId", globalSecondaryIndexName = "userIdIndex")
   public String getUserId() {
     return userId;
   }
