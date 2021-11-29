@@ -29,7 +29,7 @@ public class TokenFactory {
         Map<String, Object> tokenHeaders = new HashMap<>();
         tokenHeaders.put("userId", userId);
         tokenHeaders.put("accountIds", accountIds);
-        String encodedToken = JwtEncoder.encodeJWT("Account id", "Card System", "Subject", tokenHeaders);
+        String encodedToken = JwtEncoder.encodeJWT(user.getUserId(), "Card System", "Subject", tokenHeaders);
         return Optional.of(new JwtToken(userId, accountIds, encodedToken));
     }
 

@@ -16,7 +16,7 @@ public class User {
   private String emailAddress;
   private String ssn;
   
-  @DynamoDBHashKey(attributeName = "UserId")
+  @DynamoDBHashKey(attributeName = "UserID")
   @DynamoDBAttribute
   public String getUserId() {
     return userId;
