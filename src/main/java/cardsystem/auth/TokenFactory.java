@@ -3,6 +3,8 @@ package cardsystem.auth;
 import cardsystem.user.User;
 import cardsystem.user.UserFetcher;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwsHeader;
 
 import java.util.*;
 
@@ -40,10 +42,11 @@ public class TokenFactory {
      * @return token instance
      */
     public static Optional<Token> createToken(String authToken) {
-        Claims claims = JwtEncoder.decodeJWT(authToken);
-        String userId = (String) claims.getOrDefault("userId", null);
-        Collection<String> accountIds = (Collection<String>) claims.getOrDefault("accountIds", null);
-        if (userId == null || accountIds == null || !isValidToken(claims)) {
+        Jws<Claims> jws = JwtEncoder.decodeJWT(authToken);
+        JwsHeader header = jws.getHeader();
+        String userId = (String) header.getOrDefault("userId", null);
+        Collection<String> accountIds = (Collection<String>) header.getOrDefault("accountIds", null);
+        if (userId == null || accountIds == null || !isValidToken(jws.getBody())) {
             return Optional.empty();
         }
         return Optional.of(new JwtToken(userId, accountIds, authToken));

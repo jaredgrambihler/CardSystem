@@ -22,7 +22,7 @@ public class TestToken {
                 subject,
                 new HashMap<>()
         );
-        Claims claims = JwtEncoder.decodeJWT(jwt);
+        Claims claims = JwtEncoder.decodeJWT(jwt).getBody();
         assertEquals(accountId, claims.getId());
         assertEquals(issuer, claims.getIssuer());
         assertEquals(subject, claims.getSubject());

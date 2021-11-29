@@ -1,9 +1,6 @@
 package cardsystem.auth;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.xml.bind.DatatypeConverter;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -27,12 +24,11 @@ public class JwtEncoder {
         return builder.compact();
     }
 
-    public static Claims decodeJWT(String jwt) {
-        Claims claims = Jwts.parser()
+    public static Jws<Claims> decodeJWT(String jwt) {
+        Jws<Claims> jws = Jwts.parser()
                 .setSigningKey(getPrivateKeyBytes())
-                .parseClaimsJws(jwt)
-                .getBody();
-        return claims;
+                .parseClaimsJws(jwt);
+        return jws;
     }
     
     private static byte[] getPrivateKeyBytes() {
