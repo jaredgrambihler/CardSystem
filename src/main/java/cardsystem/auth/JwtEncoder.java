@@ -8,6 +8,8 @@ import jakarta.xml.bind.DatatypeConverter;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 public class JwtEncoder {
@@ -20,6 +22,7 @@ public class JwtEncoder {
                 .setSubject(subject)
                 .setIssuer(issuer)
                 .setHeader(headers)
+                .setExpiration(getExpirationDate())
                 .signWith(signatureAlgorithm, signingKey);
         return builder.compact();
     }
@@ -36,6 +39,13 @@ public class JwtEncoder {
         // this isn't secure, but leave it here for ease of implementation
         String privateKey = "4C8kum4LxyKWYLM78sKdXrzbBjDCFyfX";
         return DatatypeConverter.parseBase64Binary(privateKey);
+    }
+
+    private static Date getExpirationDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.HOUR_OF_DAY, 12);
+        return calendar.getTime();
     }
 
 }
