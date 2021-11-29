@@ -2,7 +2,6 @@ package cardsystem.models;
 
 public class AccountCreationRequest {
     private String authToken;
-    private String userId;
     private String accountName;
     private int salary;
 
