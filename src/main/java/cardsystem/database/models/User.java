@@ -49,7 +49,7 @@ public class User {
     this.income = income;
   } 
 
-  @DynamoDBIndexHashKey(attributeName = "emailAddress", globalSecondaryIndexName = "emailIndex")
+  @DynamoDBIndexHashKey(attributeName = "email", globalSecondaryIndexName = "emailIndex")
   public String getEmailAddress() {
     return emailAddress;
   }
