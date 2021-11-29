@@ -8,6 +8,7 @@ on:
       - aws-deployment
     paths:
       - 'src/**'
+      - 'pom.xml'
       - '.github/**'
 
 jobs:
