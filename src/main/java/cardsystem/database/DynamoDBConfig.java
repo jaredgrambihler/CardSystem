@@ -24,7 +24,7 @@ public class DynamoDBConfig {
         return DynamoDBMapperConfig
                 .builder()
                 .withSaveBehavior(DynamoDBMapperConfig.SaveBehavior.UPDATE_SKIP_NULL_ATTRIBUTES)
-                .withConsistentReads(DynamoDBMapperConfig.ConsistentReads.CONSISTENT)
+                .withConsistentReads(DynamoDBMapperConfig.ConsistentReads.EVENTUAL)
                 .withTableNameResolver(new DynamoDBMapperConfig.DefaultTableNameResolver())
                 .withTableNameOverride(null)
                 .withPaginationLoadingStrategy(DynamoDBMapperConfig.PaginationLoadingStrategy.EAGER_LOADING);
