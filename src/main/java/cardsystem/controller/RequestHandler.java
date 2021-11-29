@@ -117,20 +117,22 @@ public class RequestHandler {
 
     private static AccountCreationResponse submitCreditCardAccountApplication(String requestBody) {
         AccountCreationRequest accountCreation = gson.fromJson(requestBody, AccountCreationRequest.class);
-        String userId = accountCreation.getUserId();
         String accountName = accountCreation.getAccountName();
         if (accountName == null || accountName.isEmpty()) {
             accountName = "Credit Card Account";
         }
         int salary = accountCreation.getSalary();
-        Optional<CreditCardAccount> creditCardAccountOptional = new AccountCreator()
-                .createNewCreditCardAccount(accountName, userId, salary);
+        Optional<Token> tokenOptional = TokenFactory.createToken(accountCreation.getAuthToken());
         AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
-        if (creditCardAccountOptional.isPresent()) {
-            accountCreationResponse.setAccountNumber(creditCardAccountOptional.get().getAccountNumber());
-            accountCreationResponse.setIsApproved(true);
-        } else {
-            accountCreationResponse.setIsApproved(false);
+        accountCreationResponse.setIsApproved(false);
+        if (tokenOptional.isPresent()) {
+            String userId = tokenOptional.get().getUserId();
+            Optional<CreditCardAccount> creditCardAccountOptional = new AccountCreator()
+                    .createNewCreditCardAccount(accountName, userId, salary);
+            if (creditCardAccountOptional.isPresent()) {
+                accountCreationResponse.setAccountNumber(creditCardAccountOptional.get().getAccountNumber());
+                accountCreationResponse.setIsApproved(true);
+            }
         }
         return accountCreationResponse;
     }

@@ -13,14 +13,6 @@ public class AccountCreationRequest {
     public void setAuthToken(String authToken){
         this.authToken = authToken;
     }
-    
-    public String getUserId(){
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
 
     public String getAccountName(){
         return accountName;
