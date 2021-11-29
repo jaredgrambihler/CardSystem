@@ -13,6 +13,6 @@ public class DynamoDBCommunicator implements DatabaseCommunicator {
 
     @Override
     public <T> List<T> query(Class<T> clazz, DynamoDBQueryExpression<T> query) {
-        return DynamoDBConfig.getDefaultMapper().query(clazz, query);
+        return DynamoDBConfig.getDefaultMapper().query(clazz, query.withConsistentRead(false));
     }
 }
