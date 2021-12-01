@@ -19,10 +19,10 @@ public class BalanceFetcher {
                 .withLimit(1)
         );
         if (results.size() == 0) {
-            
+
             return new Balance(accountId, BigDecimal.valueOf(0), BigDecimal.valueOf(AccountFetcher.loadCreditCardAccount(accountId).get().getCreditLimit()));
         } else {
-            return loadBalance(balance);
+            return loadBalance(results.get(0));
         }
     }
     
