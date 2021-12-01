@@ -1,10 +1,10 @@
 package cardsystem.transaction;
 
 public enum TransactionType {
-    CASH_ADVANCE("Cash Advance", 0, Double.MAX_VALUE),
+    CASH_ADVANCE("Cash_Advance", 0, Double.MAX_VALUE),
     MERCHANT("Merchant", 0, Double.MAX_VALUE),
-    REFUND("Refund", Double.MIN_VALUE, 0),
-    PAYMENT("Payment", Double.MIN_VALUE, 0);
+    REFUND("Refund", -Double.MAX_VALUE, 0),
+    PAYMENT("Payment", -Double.MAX_VALUE, 0);
 
     private String transactionType;
     private double minAmount;
