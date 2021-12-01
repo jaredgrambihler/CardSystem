@@ -11,23 +11,20 @@ public class CreditCardAccount implements Account {
 	private String accountNumber;
 	private String userId;
 	private int creditLimit;
-	
+
 	/**
 	 * Create a credit card account
 	 * @param accountName the name of the account
 	 * @param accountId the unique id of the account
-	 * @param accountNr the account number
+	 * @param accountNumber the account number
 	 * @param userId the id of the user who owns the account
+	 * @param creditLimit the credit limit of the account
 	 */
-	public CreditCardAccount(String accountName, String accountId, String accountNumber, String userId) {
+	public CreditCardAccount(String accountName, String accountId, String accountNumber, String userId, int creditLimit) {
 		this.accountName = accountName;
 		this.accountId = accountId;
 		this.accountNumber = accountNumber;
 		this.userId = userId;
-	}
-
-	public CreditCardAccount(String accountName, String accountId, String accountNumber, String userId, int creditLimit) {
-		this(accountName, accountId, accountNumber, userId);
 		this.creditLimit = creditLimit;
 	}
 

@@ -21,7 +21,7 @@ public class AccountFetcher {
 	
 	public static CreditCardAccount loadCreditCardAccountFromDatabaseModel(cardsystem.database.models.Account account) {
         return new CreditCardAccount(account.getAccountName(), account.getAccountId(),
-        		account.getAccountNumber(), account.getUserId()
+        		account.getAccountNumber(), account.getUserId(), account.getCreditLimit()
         );
 	}
 	
