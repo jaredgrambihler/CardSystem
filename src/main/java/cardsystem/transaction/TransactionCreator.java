@@ -1,6 +1,7 @@
 package cardsystem.transaction;
 
 import cardsystem.balance.BalanceFetcher;
+import cardsystem.balance.TransactionHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class TransactionCreator {
         );
         if (transaction.isValid()) {
             transaction.saveToDatabase();
+            new TransactionHandler().onTransaction(transaction);
             return Optional.of(transaction);
         } else {
             return Optional.empty();

@@ -1,6 +1,9 @@
 package cardsystem.account;
 
+import cardsystem.balance.TransactionHandler;
 import cardsystem.database.DynamoDBCommunicator;
+
+import java.math.BigDecimal;
 
 public class CreditCardAccount implements Account {
 	private String accountName;
@@ -55,6 +58,7 @@ public class CreditCardAccount implements Account {
 	@Override
 	public void setCreditLimit(int creditLimit) {
 		this.creditLimit = creditLimit;
+		new TransactionHandler().onCreditLimitChange(this, BigDecimal.valueOf(creditLimit));
 	}
 	
 	public void saveToDatabase() {

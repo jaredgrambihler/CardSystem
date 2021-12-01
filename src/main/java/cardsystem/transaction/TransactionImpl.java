@@ -1,5 +1,6 @@
 package cardsystem.transaction;
 
+import cardsystem.balance.TransactionHandler;
 import cardsystem.database.DateConverter;
 import cardsystem.database.DynamoDBCommunicator;
 
@@ -107,6 +108,7 @@ public class TransactionImpl implements Transaction {
             throw new IllegalArgumentException("Posted date cannot be before transaction date");
         }
         this.postedState = new PostedTransactionState(postedDate);
+        new TransactionHandler().onTransactionPosted(this);
     }
 
     public void saveToDatabase() {
