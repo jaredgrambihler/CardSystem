@@ -26,6 +26,11 @@ public class CreditCardAccount implements Account {
 		this.userId = userId;
 	}
 
+	public CreditCardAccount(String accountName, String accountId, String accountNumber, String userId, int creditLimit) {
+		this(accountName, accountId, accountNumber, userId);
+		this.creditLimit = creditLimit;
+	}
+
 	@Override
 	public String getAccountName() {
 		return accountName;

@@ -18,8 +18,8 @@ public class AccountCreator implements AccountFactory {
 	@Override
 	public Optional<CreditCardAccount> createNewCreditCardAccount(String accountName, String userId, int salary) {
 		if (UserApprover.isValidSalary(salary)) {
-			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId);
-			creditCardAccount.setCreditLimit(getUserCreditLimit(userId, salary));
+			CreditCardAccount creditCardAccount = new CreditCardAccount(accountName, createAccountId(), createNewAccountNumber(), userId,
+					getUserCreditLimit(userId, salary));
 			creditCardAccount.saveToDatabase();
 			return Optional.of(creditCardAccount);
 		}
