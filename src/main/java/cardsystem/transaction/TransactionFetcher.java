@@ -44,10 +44,6 @@ public class TransactionFetcher {
         );
         List<Transaction> transactions = new ArrayList<>();
         for (cardsystem.database.models.Transaction transactionModel : results) {
-            // filter out transactions that are beyond the target date
-            if (transactionModel.getPostedDate().compareTo(DateConverter.getIso8601Timestamp(endTime)) > 0) {
-                continue;
-            }
             Transaction transaction = loadTransactionFromDatabaseModel(transactionModel);
             if (transaction != null) {
                 transactions.add(transaction);
