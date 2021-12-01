@@ -34,15 +34,18 @@ public class TransactionFetcher {
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
         expressionAttributeValues.put(":accountId", new AttributeValue().withS(accountId));
         expressionAttributeValues.put(":startPostedDate", new AttributeValue().withS(DateConverter.getIso8601Timestamp(startTime)));
-        expressionAttributeValues.put(":endPostedDate", new AttributeValue().withS(DateConverter.getIso8601Timestamp(endTime)));
         List<cardsystem.database.models.Transaction> results = new DynamoDBCommunicator().query(
                 cardsystem.database.models.Transaction.class,
                 new DynamoDBQueryExpression<cardsystem.database.models.Transaction>()
-                        .withKeyConditionExpression("accountId = :accountId and postedDate >= :startPostedDate and postedDate < :endPostedDate")
+                        .withKeyConditionExpression("accountId = :accountId and postedDate >= :startPostedDate")
                         .withExpressionAttributeValues(expressionAttributeValues)
         );
         List<Transaction> transactions = new ArrayList<>();
         for (cardsystem.database.models.Transaction transactionModel : results) {
+            // filter out transactions that are beyond the target date
+            if (transactionModel.getPostedDate().compareTo(DateConverter.getIso8601Timestamp(endTime)) > 0) {
+                continue;
+            }
             Transaction transaction = loadTransactionFromDatabaseModel(transactionModel);
             if (transaction != null) {
                 transactions.add(transaction);
