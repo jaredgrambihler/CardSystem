@@ -125,13 +125,16 @@ public class RequestHandler {
         Optional<Token> tokenOptional = TokenFactory.createToken(accountCreation.getAuthToken());
         AccountCreationResponse accountCreationResponse = new AccountCreationResponse();
         accountCreationResponse.setIsApproved(false);
+        accountCreationResponse.setMessage("Token optional not found.");
         if (tokenOptional.isPresent()) {
             String userId = tokenOptional.get().getUserId();
             Optional<CreditCardAccount> creditCardAccountOptional = new AccountCreator()
                     .createNewCreditCardAccount(accountName, userId, salary);
+            accountCreationResponse.setMessage("Credit card account not created");
             if (creditCardAccountOptional.isPresent()) {
                 accountCreationResponse.setAccountNumber(creditCardAccountOptional.get().getAccountNumber());
                 accountCreationResponse.setIsApproved(true);
+                accountCreationResponse.setMessage("Account created.");
             }
         }
         return accountCreationResponse;
