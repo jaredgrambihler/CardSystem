@@ -4,14 +4,15 @@ package cardsystem.database;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /** Convert between date objects and strings used in the db **/
 public class DateConverter {
 
     public static String getIso8601Timestamp(LocalDateTime date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-        return date.atZone(ZoneId.of("UTC")).format(formatter);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        return date.format(formatter);
     }
 
     public static LocalDateTime getLocalDateTime(String iso8601Date) {
