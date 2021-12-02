@@ -4,14 +4,12 @@ import cardsystem.controller.EventHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.lang.IllegalStateException;
 
 public class HandlerStream implements RequestStreamHandler {
 

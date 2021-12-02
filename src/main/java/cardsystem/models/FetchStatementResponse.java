@@ -1,8 +1,8 @@
 package cardsystem.models;
 
-import java.util.List;
-
 import cardsystem.transaction.Transaction;
+
+import java.util.List;
 
 public class FetchStatementResponse {
     private String accountId;

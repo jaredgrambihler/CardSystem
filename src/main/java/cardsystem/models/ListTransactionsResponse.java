@@ -1,7 +1,8 @@
 package cardsystem.models;
 
-import java.util.List;
 import cardsystem.transaction.Transaction;
+
+import java.util.List;
 
 public class ListTransactionsResponse {
     //Array of transactions (pending, posted)

@@ -1,8 +1,9 @@
 package cardsystem.balance;
 
-import java.math.BigDecimal;
-import cardsystem.transaction.Transaction;
 import cardsystem.account.CreditCardAccount;
+import cardsystem.transaction.Transaction;
+
+import java.math.BigDecimal;
 
 public class TransactionHandler {
     public void onTransaction(Transaction transaction) {

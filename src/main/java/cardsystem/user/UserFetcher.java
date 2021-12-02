@@ -1,12 +1,11 @@
 package cardsystem.user;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-
 import cardsystem.database.DateConverter;
 import cardsystem.database.DynamoDBCommunicator;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+
+import java.util.List;
+import java.util.Optional;
 
 public class UserFetcher {
 	

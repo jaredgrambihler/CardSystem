@@ -1,10 +1,10 @@
 package cardsystem.database.models;
 
-import java.math.BigDecimal;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+import java.math.BigDecimal;
 
 @DynamoDBTable(tableName = "Balance")
 public class Balance {

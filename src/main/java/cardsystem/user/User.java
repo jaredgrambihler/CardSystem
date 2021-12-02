@@ -1,16 +1,15 @@
 package cardsystem.user;
 
+import cardsystem.database.DateConverter;
+import cardsystem.database.DynamoDBCommunicator;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-
-import cardsystem.database.DateConverter;
-import cardsystem.database.DynamoDBCommunicator;
 
 public class User implements UserInterface {
 	private String name;

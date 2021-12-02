@@ -1,17 +1,19 @@
 package cardsystem.account;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-
 import cardsystem.approval.CreditLimit;
 import cardsystem.approval.UserApprover;
 import cardsystem.creditbureau.Experian;
 import cardsystem.creditbureau.ExperianCreditReport;
 import cardsystem.database.DynamoDBCommunicator;
-import cardsystem.email.*;
+import cardsystem.email.DefaultEmailSenderFactory;
+import cardsystem.email.Email;
+import cardsystem.email.EmailFactory;
 import cardsystem.user.User;
 import cardsystem.user.UserFetcher;
+
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
 public class AccountCreator implements AccountFactory {
 	

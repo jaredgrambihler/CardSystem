@@ -3,7 +3,8 @@ package cardsystem.creditbureau;
 import cardsystem.database.DynamoDBCommunicator;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 public class CreditReportFetcher {
     public static Optional<CreditReport> loadCreditReport(String ssn) {

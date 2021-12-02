@@ -1,11 +1,11 @@
 package cardsystem.rewards;
 
-import java.util.List;
-import java.util.Optional;
-
 import cardsystem.database.DynamoDBCommunicator;
 import cardsystem.transaction.Transaction;
 import cardsystem.transaction.TransactionType;
+
+import java.util.List;
+import java.util.Optional;
 
 public class RewardCalculator {
 	

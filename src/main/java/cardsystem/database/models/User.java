@@ -1,11 +1,11 @@
 package cardsystem.database.models;
 
-import java.math.BigInteger;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIndexHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
+
+import java.math.BigInteger;
 
 @DynamoDBTable(tableName = "User")
 public class User {

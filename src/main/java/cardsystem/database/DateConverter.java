@@ -3,8 +3,6 @@ package cardsystem.database;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 /** Convert between date objects and strings used in the db **/

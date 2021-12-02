@@ -4,8 +4,8 @@ import cardsystem.account.AccountFetcher;
 import cardsystem.database.DynamoDBCommunicator;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 
-import java.util.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class BalanceFetcher {
     public static Balance getLatestBalance(String accountId) {

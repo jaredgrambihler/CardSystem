@@ -1,7 +1,5 @@
 package cardsystem.models;
 
-import java.time.LocalDateTime;
-
 public class ListTransactionsRequest {
     private String authToken;
     private String accountId;

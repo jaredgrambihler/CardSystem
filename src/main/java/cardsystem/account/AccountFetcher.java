@@ -1,9 +1,10 @@
 package cardsystem.account;
 
+import cardsystem.database.DynamoDBCommunicator;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
+
 import java.util.List;
 import java.util.Optional;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import cardsystem.database.DynamoDBCommunicator;
 
 public class AccountFetcher {
 	

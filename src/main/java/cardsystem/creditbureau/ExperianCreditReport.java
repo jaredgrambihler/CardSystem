@@ -1,7 +1,8 @@
 package cardsystem.creditbureau;
 
-import java.util.List;
 import cardsystem.database.DynamoDBCommunicator;
+
+import java.util.List;
 
 public class ExperianCreditReport implements CreditReport {
     String ssn;

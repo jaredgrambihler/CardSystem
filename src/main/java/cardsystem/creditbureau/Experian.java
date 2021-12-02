@@ -1,7 +1,7 @@
 package cardsystem.creditbureau;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 public class Experian implements CreditBureau {
     public Experian() {

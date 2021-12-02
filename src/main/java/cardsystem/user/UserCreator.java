@@ -1,12 +1,12 @@
 package cardsystem.user;
 
+import cardsystem.approval.UserApprover;
+
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
 import java.util.UUID;
-
-import cardsystem.approval.UserApprover;
 
 public class UserCreator {
 	
