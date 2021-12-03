@@ -2,7 +2,7 @@ package cardsystem.transaction;
 
 public class AmountValidatedTransaction extends ValidatedTransaction {
 
-    public AmountValidatedTransaction(Transaction transaction) throws IllegalArgumentException {
+    public AmountValidatedTransaction(Transaction transaction) {
         super(transaction);
     }
 
